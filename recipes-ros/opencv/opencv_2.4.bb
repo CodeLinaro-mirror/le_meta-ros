@@ -8,6 +8,8 @@ LIC_FILES_CHKSUM = "file://include/opencv2/opencv.hpp;endline=41;md5=6d690d8488a
 ARM_INSTRUCTION_SET_armv4 = "arm"
 ARM_INSTRUCTION_SET_armv5 = "arm"
 
+DEFAULT_PREFERENCE = "-1"
+
 DEPENDS = "python-numpy libtool swig swig-native python bzip2 zlib glib-2.0"
 
 SRCREV = "0354d01e79d870adb09eea8f6d95b4093c7b4c97"
