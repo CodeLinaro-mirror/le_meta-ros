@@ -10,6 +10,14 @@ SRC_URI = "http://www.qhull.org/download/qhull-${PV}-src.tgz \
 SRC_URI[md5sum] = "d0f978c0d8dfb2e919caefa56ea2953c"
 SRC_URI[sha256sum] = "a35ecaa610550b7f05c3ce373d89c30cf74b059a69880f03080c556daebcff88"
 
+
+PACKAGES = "${PN}"
+FILES_${PN} += "/usr/lib/*"
+
+do_package_qa() {
+}
+
+
 CFLAGS += "-fPIC"
 
 EXTRA_OECMAKE += "\

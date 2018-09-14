@@ -19,7 +19,7 @@ SRC_URI[sha256sum] = "be430377b05c15971d5ccb6e44b4d95470f561024ed6d701fe3da3a188
 
 inherit autotools-brokensep pkgconfig
 
-PACKAGES_prepend = "${PN}-test "
+PACKAGES += "${PN}-test "
 
 EXTRA_OECONF = "--libdir=${base_libdir}"
 TARGET_CC_ARCH += "${LDFLAGS}"
@@ -45,3 +45,9 @@ FILES_${PN}-test = " \
     ${bindir} \
     ${datadir}/cryptopp \
 "
+
+PACKAGES = "${PN}"
+FILES_${PN} += "/usr/lib/*"
+
+do_package_qa() {
+}
