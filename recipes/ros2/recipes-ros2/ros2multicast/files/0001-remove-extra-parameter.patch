@@ -1,0 +1,25 @@
+From 180d63c099cfc45fb5be214e879282ca47a79c0f Mon Sep 17 00:00:00 2001
+From: Bo Zhang <bozhang@codeaurora.org>
+Date: Tue, 8 Jan 2019 15:50:56 +0800
+Subject: [PATCH] remove extra parameter
+
+---
+ ros2multicast/ros2multicast/command/multicast.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ros2multicast/ros2multicast/command/multicast.py b/ros2multicast/ros2multicast/command/multicast.py
+index 1a1c677..c4b8cd7 100644
+--- a/ros2multicast/ros2multicast/command/multicast.py
++++ b/ros2multicast/ros2multicast/command/multicast.py
+@@ -25,7 +25,7 @@ class MulticastCommand(CommandExtension):
+         # get verb extensions and let them add their arguments
+         verb_extensions = get_verb_extensions('ros2multicast.verb')
+         add_subparsers(
+-            parser, cli_name, '_verb', verb_extensions, required=False)
++            parser, cli_name, '_verb', verb_extensions)
+ 
+     def main(self, *, parser, args):
+         if not hasattr(args, '_verb'):
+-- 
+1.9.1
+

@@ -1,0 +1,75 @@
+From da79c067ff73f8f20c5a6c93652f62fcbd460328 Mon Sep 17 00:00:00 2001
+From: Bo Zhang <bozhang@codeaurora.org>
+Date: Thu, 3 Jan 2019 13:45:16 +0800
+Subject: [PATCH] Fix localhost
+ #267;https://github.com/eProsima/Fast-RTPS/pull/267/files
+
+---
+ src/cpp/transport/UDPv4Transport.cpp |  2 +-
+ src/cpp/utils/IPFinder.cpp           | 10 +++++-----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/src/cpp/transport/UDPv4Transport.cpp b/src/cpp/transport/UDPv4Transport.cpp
+index e6708e7..3f82d90 100644
+--- a/src/cpp/transport/UDPv4Transport.cpp
++++ b/src/cpp/transport/UDPv4Transport.cpp
+@@ -643,7 +643,7 @@ LocatorList_t UDPv4Transport::NormalizeLocator(const Locator_t& locator)
+             locator.address[14] == 0x0 && locator.address[15] == 0x0)
+     {
+         std::vector<IPFinder::info_IP> locNames;
+-        GetIP4s(locNames);
++        GetIP4s(locNames, true);
+         for (const auto& infoIP : locNames)
+         {
+             Locator_t newloc(locator);
+diff --git a/src/cpp/utils/IPFinder.cpp b/src/cpp/utils/IPFinder.cpp
+index d5582bf..b8827e3 100644
+--- a/src/cpp/utils/IPFinder.cpp
++++ b/src/cpp/utils/IPFinder.cpp
+@@ -126,7 +126,7 @@ bool IPFinder::getIPs(std::vector<info_IP>* vec_name, bool return_loopback)
+ 
+     if (getifaddrs(&ifaddr) == -1) {
+         perror("getifaddrs");
+-        exit(EXIT_FAILURE);
++	return false;
+     }
+ 
+     for (ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next)
+@@ -143,7 +143,7 @@ bool IPFinder::getIPs(std::vector<info_IP>* vec_name, bool return_loopback)
+             if (s != 0) {
+                 printf("getnameinfo() failed: %s\n", gai_strerror(s));
+                 freeifaddrs(ifaddr);
+-                exit(EXIT_FAILURE);
++		return false;
+             }
+             info_IP info;
+             info.type = IP4;
+@@ -161,7 +161,7 @@ bool IPFinder::getIPs(std::vector<info_IP>* vec_name, bool return_loopback)
+             if (s != 0) {
+                 printf("getnameinfo() failed: %s\n", gai_strerror(s));
+                 freeifaddrs(ifaddr);
+-                exit(EXIT_FAILURE);
++		return false;
+             }
+             struct sockaddr_in6 * so = (struct sockaddr_in6 *)ifa->ifa_addr;
+             info_IP info;
+@@ -187,14 +187,14 @@ bool IPFinder::getIPs(std::vector<info_IP>* vec_name, bool return_loopback)
+ bool IPFinder::getIP4Address(LocatorList_t* locators)
+ {
+     std::vector<info_IP> ip_names;
+-    if(IPFinder::getIPs(&ip_names))
++    if(IPFinder::getIPs(&ip_names, true))
+     {
+ 
+         locators->clear();
+         for(auto it=ip_names.begin();
+                 it!=ip_names.end();++it)
+         {
+-            if (it->type == IP4)
++            if (it->type == IP4 || it->type == IP4_LOCAL)
+             {
+                 locators->push_back(it->locator);
+             }
+-- 
+1.9.1
+

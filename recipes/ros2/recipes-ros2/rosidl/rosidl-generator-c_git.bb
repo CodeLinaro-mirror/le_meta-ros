@@ -1,0 +1,25 @@
+#Recipe copied from https://github.com/bmwcarit/meta-ros, with the following license:
+
+#All metadata is MIT licensed unless otherwise stated. Source code included in tree
+#for individual recipes is under the LICENSE stated in each recipe (.bb file) unless
+#otherwise stated. The descriptions in the recipes of ROS packages have been extracted
+#from the ROS wiki (http://www.ros.org/wiki/) and are licensed under Creative Commons
+#Attribution 3.0 (http://creativecommons.org/licenses/by/3.0/) unless otherwise noted.
+
+SUMMARY = "Generate the ROS interfaces in C++."
+LICENSE = "Apache-2.0"
+LIC_FILES_CHKSUM = "file://package.xml;beginline=8;endline=8;md5=12c26a18c7f493fdc7e8a93b16b7c04f"
+DEPENDS = "rosidl-typesupport-interface"
+
+include rosidl.inc
+
+RDEPENDS_${PN} += " \
+    rosidl-parser \
+    ${PYTHON_PN}-json \
+    ${PYTHON_PN}-empy \
+"
+
+RDEPENDS_${PN}-dev += " \
+    rosidl-cmake-dev \
+    rosidl-typesupport-interface-dev \
+"

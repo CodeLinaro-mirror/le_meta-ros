@@ -1,0 +1,35 @@
+From 3f0a2692af27aaf44e8fa658fb27ce5a95fcf4eb Mon Sep 17 00:00:00 2001
+From: Bo Zhang <bozhang@codeaurora.org>
+Date: Wed, 9 Jan 2019 17:33:42 +0800
+Subject: [PATCH] install the binary to filesystem
+
+---
+ hello_world/CMakeLists.txt | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/hello_world/CMakeLists.txt b/hello_world/CMakeLists.txt
+index 5a0c05b..cd152ee 100644
+--- a/hello_world/CMakeLists.txt
++++ b/hello_world/CMakeLists.txt
+@@ -23,12 +23,16 @@ target_link_libraries(hello_world
+   ${catkin_LIBRARIES}
+ )
+ 
++## Set the name, and make it a "global" executable
++set_target_properties(hello_world PROPERTIES
++  OUTPUT_NAME hello_ros
++  RUNTIME_OUTPUT_DIRECTORY ${CATKIN_DEVEL_PREFIX}/bin)
++
+ ## Mark executables and/or libraries for installation
+ install(TARGETS hello_world
+   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+-)
++  RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
+ 
+ #############
+ ## Testing ##
+-- 
+1.9.1
+
