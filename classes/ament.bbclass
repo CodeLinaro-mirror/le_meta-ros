@@ -21,6 +21,8 @@ DEPENDS_append = " \
 ROS_BPN ?= "${@d.getVar('BPN', True).replace('-', '_')}"
 ROS_BPN ?= "${@d.getVar('ROS_BPN', True).replace('lib32-', '')}"
 
+ROS_SP = "${ROS_SPN}-${PV}"
+
 S = "${WORKDIR}/git/${ROS_BPN}"
 
 EXTRA_OECMAKE_append = " -DBUILD_TESTING=OFF -DPYTHON_SOABI=cpython-35m-${TUNE_ARCH}-${TARGET_OS}${ARMPKGSFX_EABI}"
@@ -50,7 +52,7 @@ FILES_${PN} = " \
     ${datadir}/ament_index/* \
     ${libdir}/${PYTHON_DIR}/* \
     ${libdir}/${ROS_BPN}/* \
-    ${libdir}/lib*.so \
+    ${libdir}/lib* \
 "
 
 FILES_${PN}-dev = " \

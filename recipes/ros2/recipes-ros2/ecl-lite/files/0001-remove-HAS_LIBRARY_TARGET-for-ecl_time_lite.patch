@@ -1,0 +1,25 @@
+From eb221b34466c6718c2ad2d4664214f3dae7d35d5 Mon Sep 17 00:00:00 2001
+From: Bo Zhang <bozhang@codeaurora.org>
+Date: Mon, 4 Mar 2019 16:49:18 +0800
+Subject: [PATCH] remove HAS_LIBRARY_TARGET for ecl_time_lite
+
+---
+ ecl_time_lite/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ecl_time_lite/CMakeLists.txt b/ecl_time_lite/CMakeLists.txt
+index d8044ac..117fc6b 100644
+--- a/ecl_time_lite/CMakeLists.txt
++++ b/ecl_time_lite/CMakeLists.txt
+@@ -39,7 +39,7 @@ add_subdirectory(src)
+ ##############################################################################
+ 
+ ament_export_include_directories(include)
+-ament_export_interfaces(HAS_LIBRARY_TARGET ${PROJECT_NAME})
++ament_export_interfaces(${PROJECT_NAME})
+ ament_export_dependencies(
+     ecl_config
+     ecl_errors
+-- 
+1.9.1
+

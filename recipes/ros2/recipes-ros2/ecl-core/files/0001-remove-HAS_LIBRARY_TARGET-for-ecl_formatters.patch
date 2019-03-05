@@ -1,0 +1,25 @@
+From 9b4ac0202d6a48114935860ed036aa807f2e1170 Mon Sep 17 00:00:00 2001
+From: Bo Zhang <bozhang@codeaurora.org>
+Date: Mon, 4 Mar 2019 15:27:03 +0800
+Subject: [PATCH] remove HAS_LIBRARY_TARGET for ecl_formatters
+
+---
+ ecl_formatters/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ecl_formatters/CMakeLists.txt b/ecl_formatters/CMakeLists.txt
+index f0e0b61..6171d85 100644
+--- a/ecl_formatters/CMakeLists.txt
++++ b/ecl_formatters/CMakeLists.txt
+@@ -33,7 +33,7 @@ add_subdirectory(src)
+ # Exports
+ ##############################################################################
+ 
+-ament_export_interfaces(HAS_LIBRARY_TARGET ${PROJECT_NAME})
++ament_export_interfaces(${PROJECT_NAME})
+ ament_export_dependencies(
+     ecl_config
+     ecl_converters
+-- 
+1.9.1
+

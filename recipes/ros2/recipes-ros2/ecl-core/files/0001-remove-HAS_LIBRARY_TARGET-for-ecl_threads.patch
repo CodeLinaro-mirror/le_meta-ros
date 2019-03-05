@@ -1,0 +1,46 @@
+From 75ebe5ec807e930e2a6483ce4b4346e86ef91406 Mon Sep 17 00:00:00 2001
+From: Bo Zhang <bozhang@codeaurora.org>
+Date: Mon, 4 Mar 2019 15:39:49 +0800
+Subject: [PATCH] remove HAS_LIBRARY_TARGET for ecl_threads
+
+---
+ ecl_threads/CMakeLists.txt           | 3 ++-
+ ecl_threads/ecl_threads-extras.cmake | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/ecl_threads/CMakeLists.txt b/ecl_threads/CMakeLists.txt
+index b352645..77cf0f2 100644
+--- a/ecl_threads/CMakeLists.txt
++++ b/ecl_threads/CMakeLists.txt
+@@ -25,6 +25,7 @@ find_package(ecl_utilities REQUIRED)
+ ament_package_xml()
+ ecl_enable_cxx14_compiler()
+ ecl_detect_threads()
++set(THREADS_PTHREAD_ARG "2" CACHE STRING "Forcibly set by CMakeLists.txt." FORCE)
+ 
+ if(ECL_PLATFORM_HAS_POSIX_THREADS)
+   # TODO: move this over into ecl_detect_threads
+@@ -46,7 +47,7 @@ add_subdirectory(src)
+ # Exports
+ ##############################################################################
+ 
+-ament_export_interfaces(HAS_LIBRARY_TARGET ${PROJECT_NAME})
++ament_export_interfaces(${PROJECT_NAME})
+ ament_export_dependencies(
+     ecl_config
+     ecl_errors
+diff --git a/ecl_threads/ecl_threads-extras.cmake b/ecl_threads/ecl_threads-extras.cmake
+index 331b173..fbf9cfc 100644
+--- a/ecl_threads/ecl_threads-extras.cmake
++++ b/ecl_threads/ecl_threads-extras.cmake
+@@ -1,6 +1,7 @@
+ 
+ find_package(ecl_build REQUIRED)
+ 
++set(THREADS_PTHREAD_ARG "2" CACHE STRING "Forcibly set by CMakeLists.txt." FORCE)
+ ecl_detect_threads()
+ 
+ if(ECL_PLATFORM_HAS_POSIX_THREADS)
+-- 
+1.9.1
+

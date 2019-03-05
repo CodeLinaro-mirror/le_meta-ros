@@ -34,4 +34,35 @@ RDEPENDS_${PN} = "\
     ros2-trajectory-msgs \
     ros2-visualization-msgs \
     rosidl-generator-py \
+    tf2 \
+    console-bridge \
+    tf2-ros \
+    tf2-msgs \
+    ecl-mobile-robot \
+    ecl-build \
+    ecl-license \
+    ecl-config \
+    ecl-errors \
+    ecl-time-lite \
+    ecl-command-line \
+    ecl-concepts \
+    ecl-containers \
+    ecl-converters \
+    ecl-devices \
+    ecl-eigen \
+    ecl-exceptions \
+    ecl-formatters \
+    ecl-geometry \
+    ecl-linear-algebra \
+    ecl-math \
+    ecl-mpl \
+    ecl-sigslots \
+    ecl-threads \
+    ecl-time \
+    ecl-type-traits \
+    ecl-utilities \
+    libeigen \
+    kobuki-driver \
+    kobuki-msgs \
+    kobuki-ros \
 "

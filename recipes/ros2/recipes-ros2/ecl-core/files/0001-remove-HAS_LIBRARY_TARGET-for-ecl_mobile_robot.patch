@@ -1,0 +1,25 @@
+From 5c2bf755f0f57df64abd976537168b15b954468b Mon Sep 17 00:00:00 2001
+From: Bo Zhang <bozhang@codeaurora.org>
+Date: Mon, 4 Mar 2019 15:35:13 +0800
+Subject: [PATCH] remove HAS_LIBRARY_TARGET for ecl_mobile_robot
+
+---
+ ecl_mobile_robot/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ecl_mobile_robot/CMakeLists.txt b/ecl_mobile_robot/CMakeLists.txt
+index 9222dd0..7165358 100644
+--- a/ecl_mobile_robot/CMakeLists.txt
++++ b/ecl_mobile_robot/CMakeLists.txt
+@@ -35,7 +35,7 @@ add_subdirectory(src)
+ # Exports
+ ##############################################################################
+ 
+-ament_export_interfaces(HAS_LIBRARY_TARGET ${PROJECT_NAME})
++ament_export_interfaces(${PROJECT_NAME})
+ ament_export_dependencies(
+     ecl_errors
+     ecl_formatters
+-- 
+1.9.1
+

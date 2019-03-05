@@ -1,0 +1,23 @@
+From b3f869f6fd4616bca3cb5ec87d18253934a41b16 Mon Sep 17 00:00:00 2001
+From: Bo Zhang <bozhang@codeaurora.org>
+Date: Mon, 4 Mar 2019 19:36:29 +0800
+Subject: [PATCH] add header files
+
+---
+ kobuki_driver/include/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kobuki_driver/include/CMakeLists.txt b/kobuki_driver/include/CMakeLists.txt
+index fd071a2..622e805 100644
+--- a/kobuki_driver/include/CMakeLists.txt
++++ b/kobuki_driver/include/CMakeLists.txt
+@@ -6,5 +6,5 @@ install(
+   DIRECTORY
+     ${PROJECT_NAME}/
+   DESTINATION
+-    include
++    include/${PROJECT_NAME}
+ )
+-- 
+1.9.1
+
