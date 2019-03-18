@@ -5,13 +5,16 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=5b8a2a1aa14e6de44b4273134946a34c"
 
 DEPENDS = "boost libflann libeigen qhull"
 
-SRC_URI = "https://github.com/PointCloudLibrary/${PN}/archive/${P}.tar.gz"
+ROS_BPN ?= "${@d.getVar('PN', True).replace('lib32-', '')}"
+ROS_SP ?= "${ROS_BPN}-${PV}"
+
+SRC_URI = "https://github.com/PointCloudLibrary/${ROS_BPN}/archive/${ROS_SP}.tar.gz"
 SRC_URI[md5sum] = "8c1308be2c13106e237e4a4204a32cca"
 SRC_URI[sha256sum] = "9e54b0c1b59a67a386b9b0f4acb2d764272ff9a0377b825c4ed5eedf46ebfcf4"
 
 SRC_URI += "file://0001-make-the-pcl-library-compile-with-gcc6.patch"
 
-S = "${WORKDIR}/pcl-${P}"
+S = "${WORKDIR}/pcl-${ROS_SP}"
 
 EXTRA_OECMAKE += "\
   -DCMAKE_SKIP_RPATH=ON \
@@ -36,6 +39,7 @@ EXTRA_OECMAKE += "\
 #Setting -ffloat-store to alleviate 32bit vs 64bit discrepancies on non-SSE platforms.
 CXXFLAGS += "${@bb.utils.contains("TARGET_CC_ARCH", "-mfpmath=sse", "", "-ffloat-store", d)}"
 
+
 inherit cmake
 
-FILES_${PN}-dev += "${datadir}/${PN}-1.8/*.cmake"
+FILES_${ROS_BPN}-dev += "${datadir}/${ROS_BPN}-1.8/*.cmake"
