@@ -13,3 +13,5 @@ S = "${WORKDIR}/git"
 inherit cmake
 
 BBCLASSEXTEND = "native"
+
+FILES_${PN} += " /usr/lib "

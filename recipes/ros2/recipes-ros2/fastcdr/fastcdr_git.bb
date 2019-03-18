@@ -19,3 +19,9 @@ SRC_URI = "git://github.com/eProsima/Fast-CDR.git;protocol=git; \
 S = "${WORKDIR}/git"
 
 inherit cmake
+
+FILES_${PN} += " /usr/lib "
+
+SYSROOT_DIRS += " /usr/lib "
+
+INSANE_SKIP_${PN} += "dev-so"

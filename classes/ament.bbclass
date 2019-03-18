@@ -25,7 +25,8 @@ ROS_SP = "${ROS_SPN}-${PV}"
 
 S = "${WORKDIR}/git/${ROS_BPN}"
 
-EXTRA_OECMAKE_append = " -DBUILD_TESTING=OFF -DPYTHON_SOABI=cpython-35m-${TUNE_ARCH}-${TARGET_OS}${ARMPKGSFX_EABI}"
+ROS_ARMPKGSFX_EABI = "${@bb.utils.contains('ARMPKGSFX_EABI', 'hf', "hf", '-gnu', d)}"
+EXTRA_OECMAKE_append = " -DBUILD_TESTING=OFF -DPYTHON_SOABI=cpython-35m-${TUNE_ARCH}-${TARGET_OS}${ROS_ARMPKGSFX_EABI}"
 export AMENT_PREFIX_PATH="${STAGING_DIR_HOST}${prefix}:${STAGING_DIR_NATIVE}${prefix}"
 
 inherit cmake python3native
@@ -52,10 +53,13 @@ FILES_${PN} = " \
     ${datadir}/ament_index/* \
     ${libdir}/${PYTHON_DIR}/* \
     ${libdir}/${ROS_BPN}/* \
-    ${libdir}/lib* \
+    ${libdir}/* \
+    /usr/lib/* \
 "
 
 FILES_${PN}-dev = " \
     ${datadir}/${ROS_BPN}/cmake/* \
     ${includedir} \
 "
+
+SYSROOT_DIRS += " /usr/lib "

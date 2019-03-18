@@ -26,3 +26,9 @@ inherit cmake
 do_install_append() {
     rm -r ${D}/usr/examples
 }
+
+FILES_${PN} += " /usr/lib "
+
+SYSROOT_DIRS += " /usr/lib "
+
+INSANE_SKIP_${PN} += "dev-so"
