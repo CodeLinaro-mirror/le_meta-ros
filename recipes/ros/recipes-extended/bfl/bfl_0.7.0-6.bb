@@ -5,13 +5,17 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
 
 DEPENDS = "cppunit boost"
 
-SRC_URI = "https://github.com/ros-gbp/${PN}-release/archive/release/indigo/${PN}/${PV}.tar.gz"
+ROS_BPN ?= "${@d.getVar('PN', True).replace('lib32-', '')}"
+ROS_SP ?= "${ROS_BPN}-${PV}"
+
+
+SRC_URI = "https://github.com/ros-gbp/${ROS_BPN}-release/archive/release/indigo/${ROS_BPN}/${PV}.tar.gz"
 SRC_URI[md5sum] = "8140555e28ddea22a10a9ec59d96a4a0"
 SRC_URI[sha256sum] = "296bec7f11430dd99a9617333d91c5c94ccf96ef6a4aa242917cc19480169740"
 
 SRC_URI += "file://0001-drop-pathes-to-unused-libraries-for-passing-the-qa_s.patch"
 
-S = "${WORKDIR}/bfl-release-release-indigo-${P}"
+S = "${WORKDIR}/bfl-release-release-indigo-${ROS_SP}"
 
 inherit cmake faulty-solibs
 
