@@ -27,12 +27,12 @@
 
 #!/bin/sh
 mount -o remount,rw /
-export LD_LIBRARY_PATH=/opt/ros/indigo/lib
+export LD_LIBRARY_PATH=/opt/ros/indigo/lib:$LD_LIBRARY_PATH
 export CPATH=/opt/ros/indigo/include
 export ROSLISP_PACKAGE_DIRECTORIES=
 export ROS_DISTRO=indigo
 export PKG_CONFIG_PATH=/opt/ros/indigo/lib/pkgconfig
-export CMAKE_PREFIX_PATH=/opt/ros/indigo
+export CMAKE_PREFIX_PATH=/opt/ros/indigo:$CMAKE_PREFIX_PATH
 export TURTLEBOT_NAME=turtlebot
 export ROS_ETC_DIR=/opt/ros/indigo/etc/ros
 
