@@ -7,4 +7,4 @@ DEPENDS = "catkin ecl-config ecl-errors ecl-license ecl-concepts ecl-exceptions 
 inherit catkin
 require ecl-core.inc
 
-
+SRC_URI += "file://0001-remove-interface-because-gcc-8.2-compile-errors.patch;patchdir=.. "

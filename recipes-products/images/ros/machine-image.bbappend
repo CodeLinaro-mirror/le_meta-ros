@@ -13,3 +13,8 @@ def get_img_inc_file(d):
     return img_inc_file
 
 include ${BASEMACHINE}/${@get_img_inc_file(d)}
+IMAGE_INSTALL += "${@bb.utils.contains('MULTILIB_VARIANTS', 'lib32', 'lib32-packagegroup-ros-qti', 'packagegroup-ros-qti', d)}"
+IMAGE_INSTALL += "${@bb.utils.contains('MULTILIB_VARIANTS', 'lib32', 'lib32-ros-scripts', 'ros-scripts', d)}"
+IMAGE_INSTALL += "${@bb.utils.contains('MULTILIB_VARIANTS', 'lib32', 'lib32-demo-ros-cpp', 'demo-ros-cpp', d)}"
+IMAGE_INSTALL += "${@bb.utils.contains('MULTILIB_VARIANTS', 'lib32', 'lib32-roscpp-tutorials', 'roscpp-tutorials', d)}"
+

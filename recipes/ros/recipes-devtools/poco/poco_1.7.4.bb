@@ -8,6 +8,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=4267f48fc738f50380cbeeb76f95cebc"
 # These dependencies are required by Foundation
 DEPENDS = "libpcre zlib"
 
+DEFAULT_PREFERENCE = "-1"
+
 inherit cmake ptest
 
 BBCLASSEXTEND = "native"

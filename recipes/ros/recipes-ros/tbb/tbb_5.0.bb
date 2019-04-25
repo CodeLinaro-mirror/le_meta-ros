@@ -4,22 +4,18 @@ DESCRIPTION = "Parallelism library for C++ - runtime files \
     higher-level, task-based parallelism that abstracts platform details \
     and threading mechanism for performance and scalability."
 HOMEPAGE = "http://threadingbuildingblocks.org/"
-LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=2c7f2caf277a3933e3acdf7f89d54cc1"
-PRDATE = "20130314"
-PR = "r${PRDATE}"
+LICENSE = "Apache-2.0"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
-SRC_URI = "http://threadingbuildingblocks.org/sites/default/files/software_releases/source/tbb41_${PRDATE}oss_src.tgz \
-           file://cross-compile.patch \
-           file://allow-to-build-for-older-arm-cores.patch \
+SRCREV = "ab775e45cbda7115de05fa5465321f6324b2ac6c"
+SRC_URI = "https://github.com/intel/tbb/archive/2019.tar.gz;downloadfilename=tbb.tar.gz \
+	   file://0001-cross-compile-arm-cores.patch \
            file://tbb.pc"
 
-S = "${WORKDIR}/tbb41_${PRDATE}oss/"
+S = "${WORKDIR}/tbb-2019/"
 
-DEFAULT_PREFERENCE = "-1"
-
-SRC_URI[md5sum] = "ed4af7ccfa122f16cf9920b241633a3a"
-SRC_URI[sha256sum] = "32fd5979971b772caa96d40646cee585ed0070516ba2dbbcb1f9b6033d08a92d"
+SRC_URI[md5sum] = "2119f1db2f905dc5b423482d7689b7d6"
+SRC_URI[sha256sum] = "4d149895826cea785cd3b9a14f4aa743b6ef0df520eca7ee27d438fdc3d73399"
 
 python do_getpatches() {
     import os
@@ -27,8 +23,6 @@ python do_getpatches() {
     bb.utils.mkdirhier(newdir)
 
     cmd = "cd %s \
-    && (wget -c https://raw.githubusercontent.com/painterlake/meta-openembedded-my/master/meta-oe/recipes-support/tbb/tbb/allow-to-build-for-older-arm-cores.patch || pwd) \
-    && (wget -c https://raw.githubusercontent.com/painterlake/meta-openembedded-my/master/meta-oe/recipes-support/tbb/tbb/cross-compile.patch || pwd) \
     && (wget -c https://raw.githubusercontent.com/painterlake/meta-openembedded-my/master/meta-oe/recipes-support/tbb/tbb/tbb.pc || pwd)" % (newdir)
 
     os.system(cmd)

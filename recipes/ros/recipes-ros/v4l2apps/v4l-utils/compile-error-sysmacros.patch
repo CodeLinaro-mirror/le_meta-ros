@@ -1,0 +1,33 @@
+diff -Naur old/lib/libv4lconvert/control/libv4lcontrol.c new/lib/libv4lconvert/control/libv4lcontrol.c
+--- old/lib/libv4lconvert/control/libv4lcontrol.c	2014-07-27 03:33:00.000000000 +0800
++++ new/lib/libv4lconvert/control/libv4lcontrol.c	2019-04-30 13:58:44.927993143 +0800
+@@ -36,6 +36,7 @@
+ #include "libv4lcontrol-priv.h"
+ #include "../libv4lsyscall-priv.h"
+ #include <linux/videodev2.h>
++#include <sys/sysmacros.h>
+ 
+ #define ARRAY_SIZE(x) ((int)sizeof(x) / (int)sizeof((x)[0]))
+ 
+diff -Naur old/utils/libmedia_dev/get_media_devices.c new/utils/libmedia_dev/get_media_devices.c
+--- old/utils/libmedia_dev/get_media_devices.c	2014-03-02 17:11:40.000000000 +0800
++++ new/utils/libmedia_dev/get_media_devices.c	2019-04-30 13:59:18.848316516 +0800
+@@ -26,6 +26,7 @@
+ #include <dirent.h>
+ #include <limits.h>
+ #include "get_media_devices.h"
++#include <sys/sysmacros.h>
+ 
+ #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
+ 
+diff -Naur old/utils/media-ctl/libmediactl.c new/utils/media-ctl/libmediactl.c
+--- old/utils/media-ctl/libmediactl.c	2014-06-22 17:37:59.000000000 +0800
++++ new/utils/media-ctl/libmediactl.c	2019-04-30 13:59:52.776639999 +0800
+@@ -40,6 +40,7 @@
+ #include "mediactl.h"
+ #include "mediactl-priv.h"
+ #include "tools.h"
++#include <sys/sysmacros.h>
+ 
+ /* -----------------------------------------------------------------------------
+  * Graph access

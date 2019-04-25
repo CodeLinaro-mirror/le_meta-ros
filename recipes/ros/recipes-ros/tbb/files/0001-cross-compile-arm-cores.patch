@@ -1,0 +1,28 @@
+From 8ac5407589d09857726ac3efe9906a8e46516f7f Mon Sep 17 00:00:00 2001
+From: Bo Zhang <bozhang@codeaurora.org>
+Date: Wed, 22 May 2019 12:33:16 +0800
+Subject: [PATCH] cross-compile-arm-cores
+
+---
+ build/linux.gcc.inc | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/build/linux.gcc.inc b/build/linux.gcc.inc
+index 6cb89d1..d402a7b 100644
+--- a/build/linux.gcc.inc
++++ b/build/linux.gcc.inc
+@@ -32,8 +32,9 @@ DYLIB_KEY = -shared
+ EXPORT_KEY = -Wl,--version-script,
+ LIBDL = -ldl
+ 
+-CPLUS = g++
+-CONLY = gcc
++CPLUS = $(CXX)
++CONLY = $(CC)
++CPLUS_FLAGS = $(CXXFLAGS)
+ LIB_LINK_FLAGS = $(DYLIB_KEY) -Wl,-soname=$(BUILDING_LIBRARY)
+ LIBS += -lpthread -lrt
+ LINK_FLAGS = -Wl,-rpath-link=. -rdynamic
+-- 
+1.9.1
+

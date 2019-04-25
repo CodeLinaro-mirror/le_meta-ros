@@ -23,3 +23,5 @@ do_fetch_prepend(){
     bb.warn('NOTE: bbappend overrides boost recipe\'s version and sets it to ' + d.getVar('PV', True))
 }
 
+BOOST_LIBS_remove = "contract"
+BOOST_LIBS_append = "${@bb.utils.contains('LAYERSERIES_CORENAMES', 'rocko', '', ' signals', d)}"

@@ -1,0 +1,25 @@
+From 2ce8baf33ba840b20cf1262e49ee66b9eb299035 Mon Sep 17 00:00:00 2001
+From: Bo Zhang <bozhang@codeaurora.org>
+Date: Thu, 25 Apr 2019 17:52:54 +0800
+Subject: [PATCH] Changed invocation to `add` to conform template syntax
+
+---
+ utilities/message_filters/include/message_filters/synchronizer.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/utilities/message_filters/include/message_filters/synchronizer.h b/utilities/message_filters/include/message_filters/synchronizer.h
+index 7891890..1c14a6f 100644
+--- a/utilities/message_filters/include/message_filters/synchronizer.h
++++ b/utilities/message_filters/include/message_filters/synchronizer.h
+@@ -355,7 +355,7 @@ private:
+   template<int i>
+   void cb(const typename mpl::at_c<Events, i>::type& evt)
+   {
+-    this->add<i>(evt);
++    this->template add<i>(evt);
+   }
+ 
+   uint32_t queue_size_;
+-- 
+1.9.1
+
