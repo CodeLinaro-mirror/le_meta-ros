@@ -59,4 +59,12 @@ RDEPENDS_${PN} = "\
     kobuki-msgs \
     qhull \
     libcryptopp \
+    turtlebot3-msgs \
+    turtlebot3-bringup \
+    hls-lfcd-lds-driver \
+    rosserial-python \
+    rosserial-msgs \
+    python-pyserial \
+    python-unittest \
+    python-difflib \
 "  
