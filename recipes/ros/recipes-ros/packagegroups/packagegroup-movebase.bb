@@ -29,4 +29,7 @@ RDEPENDS_${PN} = "\
     amcl \
     depthimage-to-laserscan \
     gmapping \
+    hls-lfcd-lds-driver \
+    rplidar-ros \
+    ydlidar-ros \
   "
