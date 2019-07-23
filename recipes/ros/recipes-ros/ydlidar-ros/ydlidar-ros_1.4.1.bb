@@ -10,8 +10,8 @@ S = "${WORKDIR}/${ROS_SP}"
 
 INSANE_SKIP_${PN} += "file-rdeps" 
 
-SRC_URI[md5sum] = "981ea5494f0bbfe2ce6673d8ddd3d9fd"
-SRC_URI[sha256sum] = "c72fd508dbffe3e0764af6d425a9bc7e5f04cc3a51003a07b52e22f6a92aca76"
+SRC_URI[md5sum] = "72fc730f02a6163b213d4ad42a53f679"
+SRC_URI[sha256sum] = "5a58fcdd049641b971e0f8fd30b2eb24f1ebf3ef6a3ac9d0f60db3003c36db52"
 
 inherit catkin
 
