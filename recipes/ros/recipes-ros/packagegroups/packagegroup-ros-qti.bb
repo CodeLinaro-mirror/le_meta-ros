@@ -49,6 +49,7 @@ RDEPENDS_${PN} = "\
     kobuki-rapps \
     kobuki-keyop \
     kobuki-node \
+    kobuki-description \
     kobuki-random-walker \
     kobuki-auto-docking \
     kobuki-bumper2pc \
@@ -61,6 +62,7 @@ RDEPENDS_${PN} = "\
     libcryptopp \
     turtlebot3-msgs \
     turtlebot3-bringup \
+    turtlebot3-description \
     hls-lfcd-lds-driver \
     rosserial-python \
     rosserial-msgs \

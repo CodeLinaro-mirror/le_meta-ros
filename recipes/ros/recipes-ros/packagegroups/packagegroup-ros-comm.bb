@@ -40,6 +40,7 @@ RDEPENDS_${PN} = "\
     rosgraph-msgs \
     rosnode \
     std-srvs \
+    xacro \
     xmlrpcpp \
     roslaunch \
     rosmaster \
