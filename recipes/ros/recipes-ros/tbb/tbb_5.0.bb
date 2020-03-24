@@ -8,14 +8,14 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 SRCREV = "ab775e45cbda7115de05fa5465321f6324b2ac6c"
-SRC_URI = "https://github.com/intel/tbb/archive/2019.tar.gz;downloadfilename=tbb.tar.gz \
+SRC_URI = "git://github.com/oneapi-src/oneTBB.git;branch=tbb_2019 \
 	   file://0001-cross-compile-arm-cores.patch \
            file://tbb.pc"
 
-S = "${WORKDIR}/tbb-2019/"
+S = "${WORKDIR}/git/"
 
-SRC_URI[md5sum] = "2119f1db2f905dc5b423482d7689b7d6"
-SRC_URI[sha256sum] = "4d149895826cea785cd3b9a14f4aa743b6ef0df520eca7ee27d438fdc3d73399"
+SRC_URI[md5sum] = "3a01baa7ab91d0741aafc16406fd3366"
+SRC_URI[sha256sum] = "a60055ae7d6d3adfadfef0435e6a999b5b9954d14e0e3202e3fcb19fe2a30cdb"
 
 python do_getpatches() {
     import os
