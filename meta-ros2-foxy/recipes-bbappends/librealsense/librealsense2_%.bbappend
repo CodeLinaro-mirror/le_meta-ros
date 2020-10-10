@@ -5,15 +5,6 @@ ROS_EXEC_DEPENDS_remove = "virtual/kernel"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${BPN}:"
 SRC_URI_FW = "http://realsense-hw-public.s3.amazonaws.com/Releases"
-SRC_URI += " \
-    ${SRC_URI_FW}/RS4xx/FW/D4XX_FW_Image-5.12.3.0.bin;name=D4XX_FW \
-    ${SRC_URI_FW}/RS4xx/FW/D4XX_RC_Image-5.12.3.0.bin;name=D4XX_RC \
-    ${SRC_URI_FW}/SR300/FW/SR3XX_FW_Image-3.26.1.0.bin;name=SR3XX_FW \
-    ${SRC_URI_FW}/TM2/FW/target/0.2.0.926/target-0.2.0.926.mvcmd;name=T26X_FW \
-    file://0001-common-fw-CMakeLists.txt-respect-_FW_URL-when-set.patch \
-    file://0001-CMakeLists.txt-Don-t-include-CMake-install_config.cm.patch \
-    file://0003-Fix-aarch64-arm-detection.patch \
-"
 
 SRC_URI[D4XX_FW.sha256sum] = "da0dea7df616ac4605b70b957288919d4792cd87bcb20d7fd262e2ec09131d8e"
 SRC_URI[D4XX_RC.sha256sum] = "da0dea7df616ac4605b70b957288919d4792cd87bcb20d7fd262e2ec09131d8e"
