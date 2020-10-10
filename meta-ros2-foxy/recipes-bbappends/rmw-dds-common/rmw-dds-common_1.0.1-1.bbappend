@@ -1,5 +1,8 @@
 # Copyright (c) 2019 LG Electronics, Inc.
 
+FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+SRC_URI += "file://0001-Resolve-tuple-converstion-issue-on-rmw-dds-common.patch"
+
 ROS_BUILDTOOL_DEPENDS += " \
     rosidl-parser-native \
     rosidl-adapter-native \

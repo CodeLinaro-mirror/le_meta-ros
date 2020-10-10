@@ -1,0 +1,47 @@
+From 77edbc4b5553913a89a1b8c6d93a96b5ce7daabb Mon Sep 17 00:00:00 2001
+From: Zhiyuan Chen <zhiyuanc@codeaurora.org>
+Date: Thu, 15 Oct 2020 14:05:29 +0800
+Subject: [PATCH] Resolve unorderset issue on rmw fastrtps shared cpp
+
+Signed-off-by: Zhiyuan Chen <zhiyuanc@codeaurora.org>
+---
+ src/rmw_event.cpp | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/src/rmw_event.cpp b/src/rmw_event.cpp
+index 4544d31..6b29c38 100644
+--- a/src/rmw_event.cpp
++++ b/src/rmw_event.cpp
+@@ -19,13 +19,6 @@
+ #include "rmw_fastrtps_shared_cpp/rmw_common.hpp"
+ #include "types/event_types.hpp"
+ 
+-static const std::unordered_set<rmw_event_type_t> g_rmw_event_type_set{
+-  RMW_EVENT_LIVELINESS_CHANGED,
+-  RMW_EVENT_REQUESTED_DEADLINE_MISSED,
+-  RMW_EVENT_LIVELINESS_LOST,
+-  RMW_EVENT_OFFERED_DEADLINE_MISSED
+-};
+-
+ namespace rmw_fastrtps_shared_cpp
+ {
+ namespace internal
+@@ -33,7 +26,14 @@ namespace internal
+ 
+ bool is_event_supported(rmw_event_type_t event_type)
+ {
+-  return g_rmw_event_type_set.count(event_type) == 1;
++  if (event_type == RMW_EVENT_LIVELINESS_CHANGED ||
++      event_type == RMW_EVENT_REQUESTED_DEADLINE_MISSED ||
++      event_type == RMW_EVENT_LIVELINESS_LOST ||
++      event_type == RMW_EVENT_OFFERED_DEADLINE_MISSED) {
++      return true;
++  } else {
++      return false;
++  }
+ }
+ 
+ }  // namespace internal
+-- 
+2.7.4
+
