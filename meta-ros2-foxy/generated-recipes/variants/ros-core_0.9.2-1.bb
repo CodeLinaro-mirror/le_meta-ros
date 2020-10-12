@@ -68,6 +68,7 @@ ROS_EXEC_DEPENDS = " \
     rosidl-default-runtime \
     sros2 \
     sros2-cmake \
+    urdf \
 "
 
 # Currently informational only -- see http://www.ros.org/reps/rep-0149.html#dependency-tags.
