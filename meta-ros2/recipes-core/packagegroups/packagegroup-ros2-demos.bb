@@ -9,4 +9,7 @@ RDEPENDS_${PN} = "\
         demo-nodes-cpp \
         ros2run \
         ros2topic \
+        composition \
+        logging-demo \
+        examples-rclcpp-minimal-action-server \
 "
