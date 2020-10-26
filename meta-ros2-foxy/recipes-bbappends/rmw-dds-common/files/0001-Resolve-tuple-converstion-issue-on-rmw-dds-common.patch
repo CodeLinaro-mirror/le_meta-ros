@@ -1,0 +1,45 @@
+From 98b28016260892db2ad2d79348d239377b7e2774 Mon Sep 17 00:00:00 2001
+From: Zhiyuan Chen <zhiyuanc@codeaurora.org>
+Date: Thu, 15 Oct 2020 13:58:30 +0800
+Subject: [PATCH] Resolve tuple converstion issue on rmw dds common
+
+Signed-off-by: Zhiyuan Chen <zhiyuanc@codeaurora.org>
+---
+ src/graph_cache.cpp | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/src/graph_cache.cpp b/src/graph_cache.cpp
+index 5ef8843..5a3001e 100644
+--- a/src/graph_cache.cpp
++++ b/src/graph_cache.cpp
+@@ -440,7 +440,9 @@ __find_name_and_namespace_from_entity_gid(
+ {
+   auto it = participant_map.find(participant_gid);
+   if (participant_map.end() == it) {
+-    return {"", "", EndpointCreator::BARE_DDS_PARTICIPANT};
++    std::tuple<std::string, std::string, EndpointCreator>
++      dds_participant("", "", EndpointCreator::BARE_DDS_PARTICIPANT);
++    return dds_participant;
+   }
+   for (const auto & node_info : it->second.node_entities_info_seq) {
+     auto & gid_seq = is_reader ? node_info.reader_gid_seq : node_info.writer_gid_seq;
+@@ -452,10 +454,14 @@ __find_name_and_namespace_from_entity_gid(
+       }
+     );
+     if (gid_seq.end() != it) {
+-      return {node_info.node_name, node_info.node_namespace, EndpointCreator::ROS_NODE};
++      std::tuple<std::string, std::string, EndpointCreator>
++        ros_node(node_info.node_name, node_info.node_namespace, EndpointCreator::ROS_NODE);
++      return ros_node;
+     }
+   }
+-  return {"", "", EndpointCreator::UNDISCOVERED_ROS_NODE};
++  std::tuple<std::string, std::string, EndpointCreator>
++    undiscovered_ros_node("", "", EndpointCreator::UNDISCOVERED_ROS_NODE);
++  return undiscovered_ros_node;
+ }
+ 
+ using DemangleFunctionT = GraphCache::DemangleFunctionT;
+-- 
+2.7.4
+
