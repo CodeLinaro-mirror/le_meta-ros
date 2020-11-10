@@ -6,6 +6,5 @@ inherit packagegroup
 PACKAGES = "${PN}"
 
 RDEPENDS_${PN} = "\
-        ros-core \
-        packagegroup-ros2-demos \
+        desktop \
 "
