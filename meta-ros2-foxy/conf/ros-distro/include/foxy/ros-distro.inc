@@ -39,6 +39,9 @@ ROS_SUPERFLORE_GENERATED_BUILDTOOLS += " \
     uncrustify-vendor-native \
 "
 
+# this needs google-benchmark-vendor-native but we probably don't need native version
+ROS_SUPERFLORE_GENERATED_BUILDTOOLS_remove = "ament-cmake-google-benchmark-native"
+
 # alternative not yet supported implementation for fastrtps
 ROS_WORLD_SKIP_GROUPS += "connext"
 # alternative not yet supported implementation for fastrtps
@@ -76,6 +79,9 @@ ROS_WORLD_SKIP_GROUPS += "webots-python-modules"
 # recipes depending on gazebo, for which there is no OE recipe
 ROS_WORLD_SKIP_GROUPS += "gazebo"
 
+# doosan-robot2 recipes depending on ROS_UNRESOLVED_PLATFORM_PKG_controller_manager, ROS_UNRESOLVED_PLATFORM_PKG_hardware_interface, ROS_UNRESOLVED_PLATFORM_PKG_ament_python-native
+ROS_WORLD_SKIP_GROUPS += "doosan-robot2"
+
 # recipes depending on ros1
 ROS_WORLD_SKIP_GROUPS += "${@bb.utils.contains('BBFILE_COLLECTIONS', 'ros1-layer', '', 'ros1', d)}"
 
@@ -88,10 +94,22 @@ ROS_WORLD_SKIP_GROUPS += "libqglviewer"
 # recipes depending on ignition-* (UNRESOLVED-ignition-math6, UNRESOLVED-ignition-msgs5, UNRESOLVED-ignition-transport8)
 ROS_WORLD_SKIP_GROUPS += "ignition"
 
+# recipes depending on pugixml
+ROS_WORLD_SKIP_GROUPS += "pugixml"
+
+# Not compatible with newer libftdi included in meta-oe: https://github.com/kobuki-base/kobuki_ftdi/issues/3
+ROS_WORLD_SKIP_GROUPS += "kobuki-ftdi"
+
+# do_configure failures
+ROS_WORLD_SKIP_GROUPS += " \
+    lanelet2-traffic-rules \
+"
+
 # do_compile failures
 ROS_WORLD_SKIP_GROUPS += " \
     mrpt2 \
     qt-gui-cpp \
+    rc-dynamics-api \
 "
 
 # recipes depending on something from meta-qt4 layer
@@ -109,6 +127,31 @@ ROS_BUILD_TYPE_pn-behaviortree-cpp-v3 = "ament_cmake"
 #   <build_type condition="$ROS_VERSION == 2">ament_cmake</build_type>
 ROS_BUILD_TYPE_pn-lgsvl-msgs = "ament_cmake"
 ROS_BUILD_TYPE_pn-gps-umd = "ament_cmake"
+ROS_BUILD_TYPE_pn-plotjuggler = "ament_cmake"
+ROS_BUILD_TYPE_pn-kartech-linear-actuator-msgs = "ament_cmake"
+ROS_BUILD_TYPE_pn-automotive-autonomy-msgs = "ament_cmake"
+ROS_BUILD_TYPE_pn-automotive-platform-msgs = "ament_cmake"
+ROS_BUILD_TYPE_pn-automotive-navigation-msgs = "ament_cmake"
+ROS_BUILD_TYPE_pn-delphi-srr-msgs = "ament_cmake"
+ROS_BUILD_TYPE_pn-delphi-esr-msgs = "ament_cmake"
+ROS_BUILD_TYPE_pn-delphi-mrr-msgs = "ament_cmake"
+ROS_BUILD_TYPE_pn-ibeo-msgs = "ament_cmake"
+ROS_BUILD_TYPE_pn-mobileye-560-660-msgs = "ament_cmake"
+ROS_BUILD_TYPE_pn-derived-object-msgs = "ament_cmake"
+ROS_BUILD_TYPE_pn-astuff-sensor-msgs = "ament_cmake"
+ROS_BUILD_TYPE_pn-pacmod-msgs = "ament_cmake"
+ROS_BUILD_TYPE_pn-neobotix-usboard-msgs = "ament_cmake"
+ROS_BUILD_TYPE_pn-lanelet2-projection = "ament_cmake"
+ROS_BUILD_TYPE_pn-lanelet2 = "ament_cmake"
+ROS_BUILD_TYPE_pn-lanelet2-maps = "ament_cmake"
+ROS_BUILD_TYPE_pn-lanelet2-validation = "ament_cmake"
+ROS_BUILD_TYPE_pn-lanelet2-io = "ament_cmake"
+ROS_BUILD_TYPE_pn-lanelet2-python = "ament_cmake"
+ROS_BUILD_TYPE_pn-lanelet2-traffic-rules = "ament_cmake"
+ROS_BUILD_TYPE_pn-lanelet2-core = "ament_cmake"
+ROS_BUILD_TYPE_pn-lanelet2-examples = "ament_cmake"
+ROS_BUILD_TYPE_pn-lanelet2-routing = "ament_cmake"
+ROS_BUILD_TYPE_pn-mrt-cmake-modules = "ament_cmake"
 
 # Used by:
 # generated-recipes/spdlog-vendor/spdlog-vendor_1.1.1-1.bb
@@ -287,3 +330,79 @@ ROS_UNRESOLVED_PLATFORM_PKG_python3-pyqt5.qtwebengine = "python3-pyqt5"
 # Used by:
 # generated-recipes/dynamic-graph/dynamic-graph_4.2.2-1.bb
 ROS_UNRESOLVED_PLATFORM_PKG_doxygen = "doxygen"
+
+# Used by:
+# generated-recipes/mavlink/mavlink_2020.9.10-1.bb
+ROS_UNRESOLVED_PLATFORM_PKG_python3-future = "python3-future"
+
+# Used by:
+# generated-recipes/kobuki-ftdi/kobuki-ftdi_1.0.0-1.bb
+ROS_UNRESOLVED_PLATFORM_PKG_libusb-dev = "libusb1"
+
+# Used by:
+# generated-recipes/kobuki-ftdi/kobuki-ftdi_1.0.0-1.bb
+ROS_UNRESOLVED_PLATFORM_PKG_ftdi-eeprom = "libftdi"
+
+# Used by:
+# generated-recipes/kobuki-ftdi/kobuki-ftdi_1.0.0-1.bb
+ROS_UNRESOLVED_PLATFORM_PKG_libftdi-dev = "libftdi"
+
+# Used by:
+# generated-recipes/plotjuggler/plotjuggler_2.8.4-1.bb
+ROS_UNRESOLVED_PLATFORM_PKG_libqt5multimedia5-plugins = "qtmultimedia"
+
+# Used by:
+# generated-recipes/plotjuggler/plotjuggler_2.8.4-1.bb
+ROS_UNRESOLVED_PLATFORM_PKG_qtdeclarative5-dev = "qtdeclarative"
+
+# Used by:
+# generated-recipes/plotjuggler/plotjuggler_2.8.4-1.bb
+ROS_UNRESOLVED_PLATFORM_PKG_binutils = "binutils"
+
+# Used by:
+# generated-recipes/plotjuggler/plotjuggler_2.8.4-1.bb
+ROS_UNRESOLVED_PLATFORM_PKG_libqt5-svg-dev = "qtsvg"
+
+# Used by:
+# generated-recipes/plotjuggler/plotjuggler_2.8.4-1.bb
+ROS_UNRESOLVED_PLATFORM_PKG_qtmultimedia5-dev = "qtmultimedia"
+
+# Used by:
+# generated-recipes/eigenpy/eigenpy_2.5.0-1.bb
+ROS_UNRESOLVED_PLATFORM_PKG_python3 = "python3"
+
+# Used by:
+# generated-recipes/grbl-ros/grbl-ros_0.2.1-1.bb
+ROS_UNRESOLVED_PLATFORM_PKG_python3-serial = "python3-pyserial"
+
+# Used by:
+# generated-recipes/rc-genicam-api/rc-genicam-api_2.4.1-1.bb
+ROS_UNRESOLVED_PLATFORM_PKG_libpng-dev = "libpng"
+
+# Used by:
+# generated-recipes/rc-genicam-api/rc-genicam-api_2.4.1-1.bb
+ROS_UNRESOLVED_PLATFORM_PKG_protobuf = "protobuf"
+
+# Used by:
+# generated-recipes/google-benchmark-vendor/google-benchmark-vendor_0.0.3-1.bb
+ROS_UNRESOLVED_PLATFORM_PKG_benchmark = "google-benchmark"
+
+# Used by:
+# generated-recipes/mrt-cmake-modules/mrt-cmake-modules_1.0.8-1.bb
+ROS_UNRESOLVED_PLATFORM_PKG_lcov = "lcov"
+# Needs https://lists.openembedded.org/g/openembedded-devel/message/86162
+ROS_UNRESOLVED_PLATFORM_PKG_lcov-native = "lcov-native"
+ROS_UNRESOLVED_PLATFORM_PKG_python3-rospkg-native = "python3-rospkg-native"
+
+# Used by:
+# generated-recipes/mapviz/tile-map_2.1.0-1.bb
+ROS_UNRESOLVED_PLATFORM_PKG_libjsoncpp-dev = "jsoncpp"
+
+# Used by:
+# generated-recipes/mapviz/tile-map_2.1.0-1.bb
+# generated-recipes/mapviz/mapviz_2.1.0-1.bb
+ROS_UNRESOLVED_PLATFORM_PKG_libglew-dev = "glew"
+
+# Used by:
+# generated-recipes/teleop-tools/mouse-teleop_1.2.1-1.bb
+ROS_UNRESOLVED_PLATFORM_PKG_python3-tk = "python3-tkinter"

@@ -40,9 +40,9 @@ DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
 RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
 
-# matches with: https://github.com/canonical/ament_nodl-release/archive/release/foxy/ament_nodl/0.1.0-1.tar.gz
+# matches with: https://github.com/ros2-gbp/ament_nodl-release/archive/release/foxy/ament_nodl/0.1.0-1.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/ament_nodl"
-SRC_URI = "git://github.com/canonical/ament_nodl-release;${ROS_BRANCH};protocol=https"
+SRC_URI = "git://github.com/ros2-gbp/ament_nodl-release;${ROS_BRANCH};protocol=https"
 SRCREV = "6aaf56d0aa827ff07cfd26fcb39c052050ca9a57"
 S = "${WORKDIR}/git"
 
