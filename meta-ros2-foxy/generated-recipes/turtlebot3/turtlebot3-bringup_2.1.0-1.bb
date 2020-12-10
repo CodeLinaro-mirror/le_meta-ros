@@ -29,7 +29,6 @@ ROS_BUILDTOOL_EXPORT_DEPENDS = ""
 ROS_EXEC_DEPENDS = " \
     hls-lfcd-lds-driver \
     robot-state-publisher \
-    rviz2 \
     turtlebot3-description \
     turtlebot3-node \
 "
