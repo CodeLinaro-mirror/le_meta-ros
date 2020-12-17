@@ -1,0 +1,25 @@
+From b17b55f530990fe0cab720b9f44c676d9a212f96 Mon Sep 17 00:00:00 2001
+From: Zhiyuan Chen <zhiyuanc@codeaurora.org>
+Date: Thu, 10 Dec 2020 10:36:01 +0800
+Subject: [PATCH] remove add device in turtlebot3 node application
+
+Signed-off-by: Zhiyuan Chen <zhiyuanc@codeaurora.org>
+---
+ src/turtlebot3.cpp | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/turtlebot3.cpp b/src/turtlebot3.cpp
+index 917aa03..63bb93e 100644
+--- a/src/turtlebot3.cpp
++++ b/src/turtlebot3.cpp
+@@ -34,7 +34,6 @@ TurtleBot3::TurtleBot3(const std::string & usb_port)
+   add_motors();
+   add_wheels();
+   add_sensors();
+-  add_devices();
+ 
+   run();
+ }
+-- 
+2.7.4
+

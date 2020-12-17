@@ -100,6 +100,13 @@ ROS_WORLD_SKIP_GROUPS += "libpqxx"
 ROS_WORLD_SKIP_GROUPS += "python-cwiid"
 # recipes depending on UNRESOLVED-libspnav-dev
 ROS_WORLD_SKIP_GROUPS += "libspnav"
+# heifu-* recipes depending on ros-utils which seems to be this component:
+# https://gitlab.pdmfc.com/drones/ros1/drone-generic/tree/master/src/ros_utils
+# which isn't public as reported here:
+# https://github.com/ros/rosdistro/pull/26336#issuecomment-696373544
+ROS_WORLD_SKIP_GROUPS += "heifu-ros-utils"
+# expects users to install official IDS uEye drivers (http://en.ids-imaging.com/download-ueye.html)
+ROS_WORLD_SKIP_GROUPS += "ueye"
 
 # do_configure failures
 ROS_WORLD_SKIP_GROUPS += " \
@@ -705,6 +712,26 @@ ROS_UNRESOLVED_PLATFORM_PKG_v4l-utils = "v4l-utils"
 # Used by:
 # generated-recipes/tts/tts_1.0.2-1.bb
 ROS_UNRESOLVED_PLATFORM_PKG_python-boto3 = "python-boto3"
+
+# Used by:
+# generated-recipes/audio-common/audio-play_0.3.7-1.bb
+ROS_UNRESOLVED_PLATFORM_PKG_gstreamer1.0-alsa = "gstreamer1.0-plugins-base"
+
+# Used by:
+# generated-recipes/ixblue-stdbin-decoder/ixblue-stdbin-decoder_0.1.2-1.bb
+# generated-recipes/ixblue-ins-stdbin-driver/ixblue-ins-driver_0.1.3-1.bb
+ROS_UNRESOLVED_PLATFORM_PKG_libboost-dev = "boost"
+
+# Used by:
+# generated-recipes/heifu/heifu-diagnostic_0.7.1-2.bb
+# generated-recipes/heifu/heifu-safety_0.7.1-2.bb
+# generated-recipes/heifu/heifu-simple-waypoint_0.7.1-2.bb
+# generated-recipes/heifu/heifu-mavros_0.7.1-2.bb
+# but it seems to be this component:
+# https://gitlab.pdmfc.com/drones/ros1/drone-generic/tree/master/src/ros_utils
+# which isn't public as reported here:
+# https://github.com/ros/rosdistro/pull/26336#issuecomment-696373544
+ROS_UNRESOLVED_PLATFORM_PKG_ros_utils = "ros-utils"
 
 #ROS_UNRESOLVED_PLATFORM_PKG_arduino-core = "arduino-core"
 ROS_UNRESOLVED_PLATFORM_PKG_bluez = "bluez5"

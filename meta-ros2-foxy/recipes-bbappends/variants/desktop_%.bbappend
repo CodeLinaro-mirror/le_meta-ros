@@ -3,6 +3,7 @@ ROS_EXEC_DEPENDS += " \
     image-transport \
     cv-bridge \
     rcl-logging-noop \
+    turtlebot3 \
 "
 
 #Remove unavailable packages
