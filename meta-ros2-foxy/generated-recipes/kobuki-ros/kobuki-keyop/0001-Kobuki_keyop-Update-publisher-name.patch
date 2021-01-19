@@ -1,0 +1,28 @@
+From ca92d6d5fccaf2fb1901bafec9a423214675b3b6 Mon Sep 17 00:00:00 2001
+From: Ke Du <kedu@codeaurora.org>
+Date: Mon, 25 Jan 2021 09:50:09 +0530
+Subject: [PATCH] Kobuki_keyop: Update publisher name
+
+Signed-off-by: Ke Du <kedu@codeaurora.org>
+---
+ src/keyop.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/keyop.cpp b/src/keyop.cpp
+index a6c63ad..be21d55 100644
+--- a/src/keyop.cpp
++++ b/src/keyop.cpp
+@@ -104,8 +104,8 @@ KeyOp::KeyOp(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki_keyop_n
+   /*********************
+    ** Publishers
+    **********************/
+-  velocity_publisher_ = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 1);
+-  motor_power_publisher_ = this->create_publisher<kobuki_ros_interfaces::msg::MotorPower>("motor_power", 1);
++  velocity_publisher_ = this->create_publisher<geometry_msgs::msg::Twist>("commands/velocity", 1);
++  motor_power_publisher_ = this->create_publisher<kobuki_ros_interfaces::msg::MotorPower>("commands/motor_power", 1);
+ 
+   auto power_cmd = std::make_unique<kobuki_ros_interfaces::msg::MotorPower>();
+   power_cmd->state = kobuki_ros_interfaces::msg::MotorPower::ON;
+-- 
+2.7.4
+

@@ -62,6 +62,7 @@ RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
 
 ROS_BRANCH ?= "branch=devel"
 SRC_URI = "git://github.com/kobuki-base/kobuki_ros;${ROS_BRANCH};protocol=https"
+SRC_URI += "file://0001-Kobuki_keyop-Update-publisher-name.patch"
 SRCREV = "7d0b5bd2fa16cb05673d7ed16318da5e50b1e4d1"
 S = "${WORKDIR}/git/kobuki_keyop"
 
