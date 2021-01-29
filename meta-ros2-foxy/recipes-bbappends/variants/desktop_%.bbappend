@@ -4,16 +4,20 @@ ROS_EXEC_DEPENDS += " \
     cv-bridge \
     rcl-logging-noop \
     turtlebot3 \
+    kobuki-core \
+    kobuki-ros \
+    kobuki-ros-interfaces \
+    kobuki-node \
+    kobuki-keyop \
 "
 
 #Remove unavailable packages
 ROS_EXEC_DEPENDS_remove = " \
-    image-rools \
+    image-tools \
     joy \
     rqt-common-plugins \
     rviz-default-plugins \
     rviz2 \
     teleop-twist-joy \
-    teleop-twist-keyboard \
     turtlesim \
 "
