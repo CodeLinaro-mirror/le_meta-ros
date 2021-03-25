@@ -26,6 +26,7 @@ ROS_BUILD_DEPENDS = " \
 
 ROS_BUILDTOOL_DEPENDS = " \
     ament-cmake-native \
+    eigen3-cmake-module \
 "
 
 ROS_EXPORT_DEPENDS = " \
