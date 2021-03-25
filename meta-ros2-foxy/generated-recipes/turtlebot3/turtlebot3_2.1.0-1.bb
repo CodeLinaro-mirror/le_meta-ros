@@ -31,6 +31,7 @@ ROS_EXEC_DEPENDS = " \
     turtlebot3-cartographer \
     turtlebot3-description \
     turtlebot3-example \
+    turtlebot3-navigation2 \
     turtlebot3-node \
     turtlebot3-teleop \
 "
