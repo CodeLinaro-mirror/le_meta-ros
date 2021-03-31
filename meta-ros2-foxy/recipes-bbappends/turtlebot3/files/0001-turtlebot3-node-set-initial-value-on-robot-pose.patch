@@ -1,0 +1,29 @@
+From 2cb4b1b8208e5b00f2aec3e0ae4611fb9b146782 Mon Sep 17 00:00:00 2001
+From: Ke Du <kedu@codeaurora.org>
+Date: Thu, 25 Mar 2021 17:13:35 +0530
+Subject: [PATCH] turtlebot3-node: set initial value on robot pose
+
+Resolve controller server memory issue
+
+Signed-off-by: Ke Du <kedu@codeaurora.org>
+---
+ src/odometry.cpp | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/odometry.cpp b/src/odometry.cpp
+index 378e854..46bee61 100644
+--- a/src/odometry.cpp
++++ b/src/odometry.cpp
+@@ -32,7 +32,8 @@ Odometry::Odometry(
+   wheels_radius_(wheels_radius),
+   use_imu_(false),
+   publish_tf_(false),
+-  imu_angle_(0.0f)
++  imu_angle_(0.0f),
++  robot_pose_({})
+ {
+   RCLCPP_INFO(nh_->get_logger(), "Init Odometry");
+ 
+-- 
+2.7.4
+
