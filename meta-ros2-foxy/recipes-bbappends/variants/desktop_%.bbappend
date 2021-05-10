@@ -9,6 +9,7 @@ ROS_EXEC_DEPENDS += " \
     kobuki-ros-interfaces \
     kobuki-node \
     kobuki-keyop \
+    explore-ros2 \
 "
 
 #Remove unavailable packages
