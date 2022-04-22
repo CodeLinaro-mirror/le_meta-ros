@@ -33,7 +33,6 @@ ROS_EXEC_DEPENDS = " \
     launch-ros \
     nav2-common \
     navigation2 \
-    slam-toolbox \
 "
 
 # Currently informational only -- see http://www.ros.org/reps/rep-0149.html#dependency-tags.
