@@ -29,3 +29,8 @@ for pkg in ${Install_pkgs[@]}; do
     fi
 done
 
+
+exit=$(grep -c "inherit qti_gen_incremental_pkg" $Image_bb)
+if [[ $exit -eq 0 ]];  then
+	echo "inherit qti_gen_incremental_pkg" >> $Image_bb
+fi
