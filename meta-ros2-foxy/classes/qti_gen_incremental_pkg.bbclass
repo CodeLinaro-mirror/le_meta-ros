@@ -39,7 +39,10 @@ python do_gen_incremental_pkg() {
     for pkg in incremental_pkgs:
         if len(pkg.split()):
             for suffix in pn_suffixs:
-                file_name = pkg.split()[0] + suffix + '_' + pkg.split()[2] + '_' + pkg.split()[1] + '.ipk'
+                # PF: Specifies the recipe or package name and includes all version and revision numbers
+                # (i.e. glibc-2.13-r20+svnr15508/ and bash-4.2-r1/). This variable is comprised of the
+                # following: ${PN}-${EXTENDPE}${PV}-${PR}
+                file_name = pkg.split()[0] + suffix + '_' + pkg.split()[2].split(":", 1)[-1] + '_' + pkg.split()[1] + '.ipk'
                 file_full_path = os.path.join(d.getVar('DEPLOY_DIR_IPK'), pkg.split()[1], file_name)
                 if os.path.isfile(file_full_path):
                     bb.utils.copyfile(file_full_path, os.path.join(ros_ipk_dir, file_name))
