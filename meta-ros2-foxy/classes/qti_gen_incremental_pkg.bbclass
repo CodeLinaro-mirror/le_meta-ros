@@ -30,7 +30,8 @@ python do_gen_incremental_pkg() {
 
     incremental_pkgs = find_incremental_pkg(manifest_ori, manifest_inc)
 
-    ros_ipk_dir = os.path.join(d.getVar('DEPLOY_DIR'), 'artifacts', 'ros_ipk')
+    artifacts_dir = os.path.join(d.getVar('DEPLOY_DIR'), 'artifacts')
+    ros_ipk_dir = os.path.join(artifacts_dir, 'ros_ipk')
     bb.note("ros_ipk_dir: %s" % ros_ipk_dir)
     if os.path.exists(ros_ipk_dir):
         oe.path.remove(ros_ipk_dir)
@@ -47,14 +48,14 @@ python do_gen_incremental_pkg() {
                 if os.path.isfile(file_full_path):
                     bb.utils.copyfile(file_full_path, os.path.join(ros_ipk_dir, file_name))
 
-    import tarfile
+    import subprocess
 
-    tarball_file = os.path.join(d.getVar('DEPLOY_DIR'), 'artifacts', 'ros_ipk.tar.gz')
+    tarball_file = os.path.join(artifacts_dir, 'ros_ipk.tar.gz')
     if os.path.exists(tarball_file):
         os.remove(tarball_file)
-    tar = tarfile.open(tarball_file, "w:gz")
-    tar.add(ros_ipk_dir, arcname=os.path.basename(ros_ipk_dir))
-    tar.close
+    ret = subprocess.call(['tar', '-czf', tarball_file, '-C', artifacts_dir, 'ros_ipk'])
+    if ret != 0:
+        bb.error('Failed to run %s!' % cmd)
 }
 
 addtask do_gen_incremental_pkg after do_rootfs before do_image
