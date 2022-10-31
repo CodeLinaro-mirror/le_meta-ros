@@ -1,0 +1,57 @@
+#Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+#SPDX-License-Identifier: BSD-3-Clause-Clear
+#
+
+def find_incremental_pkg(original, latest):
+    incremental = []
+
+    if len(original) == 0 or len(latest) == 0:
+        bb.error("Empty manifest! Please check!")
+
+    for i in range(len(latest)):
+        if latest[i] not in original:
+            incremental.append(latest[i])
+    return incremental
+
+
+python do_gen_incremental_pkg() {
+    # These package suffixes are taken from the definitions of
+    # PACKAGES and PACKAGES_DYNAMIC in meta/conf/bitbake.conf
+    pn_suffixs = ['', '-dbg', '-dev', '-doc', '-staticdev', '-locale']
+    image_manifest = d.getVar('IMAGE_NAME') + d.getVar('IMAGE_NAME_SUFFIX') + '.manifest'
+    bb.note("image_manifest:%s" % image_manifest)
+
+    file1 = open(os.path.join(d.getVar('SDKBASEMETAPATH'), 'conf', image_manifest), 'r')
+    manifest_ori = file1.readlines()
+    file2 = open(d.getVar('IMAGE_MANIFEST'), 'r')
+    manifest_inc = file2.readlines()
+    file1.close()
+    file2.close()
+
+    incremental_pkgs = find_incremental_pkg(manifest_ori, manifest_inc)
+
+    ros_ipk_dir = os.path.join(d.getVar('DEPLOY_DIR'), 'artifacts', 'ros_ipk')
+    bb.note("ros_ipk_dir: %s" % ros_ipk_dir)
+    if os.path.exists(ros_ipk_dir):
+        oe.path.remove(ros_ipk_dir)
+    bb.utils.mkdirhier(ros_ipk_dir)
+
+    for pkg in incremental_pkgs:
+        if len(pkg.split()):
+            for suffix in pn_suffixs:
+                file_name = pkg.split()[0] + suffix + '_' + pkg.split()[2] + '_' + pkg.split()[1] + '.ipk'
+                file_full_path = os.path.join(d.getVar('DEPLOY_DIR_IPK'), pkg.split()[1], file_name)
+                if os.path.isfile(file_full_path):
+                    bb.utils.copyfile(file_full_path, os.path.join(ros_ipk_dir, file_name))
+
+    import tarfile
+
+    tarball_file = os.path.join(d.getVar('DEPLOY_DIR'), 'artifacts', 'ros_ipk.tar.gz')
+    if os.path.exists(tarball_file):
+        os.remove(tarball_file)
+    tar = tarfile.open(tarball_file, "w:gz")
+    tar.add(ros_ipk_dir, arcname=os.path.basename(ros_ipk_dir))
+    tar.close
+}
+
+addtask do_gen_incremental_pkg after do_rootfs before do_image

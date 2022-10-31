@@ -15,17 +15,24 @@ Install_pkgs="packagegroup-ros2-foxy"
 
 #Add layers to bblayers.conf
 for layer in ${ROS_LAYERS[@]}; do
-    exit_layer=$(grep -c $layer $BBLAYER_CONF)
-    if [ $exit_layer -eq 0 ];  then
-        echo "$layer is added to bblayers.conf"
+    if [[ "$(cat $BBLAYER_CONF)" =~ $layer ]];  then
+        echo "$layer has been added to bblayers.conf"
+    else
+        echo "Add $layer to $BBLAYER_CONF"
         echo "BBLAYERS += \" \${SDKBASEMETAPATH}/layers/$layer \"" >> $BBLAYER_CONF
     fi
 done
 
 for pkg in ${Install_pkgs[@]}; do
-    exit_pkg=$(grep -c $pkg $Image_bb)
-    if [[ $exit_pkg -eq 0 ]];  then
+    if [[ "$(cat $Image_bb)" =~ $pkg ]];  then
+        echo "$pkg has been added to $Image_bb"
+    else
         echo "CORE_IMAGE_EXTRA_INSTALL +=  \" $pkg  \"" >> $Image_bb
     fi
 done
 
+if [[ "$(cat $Image_bb)" =~ "inherit qti_gen_incremental_pkg" ]];  then
+	echo "qti_gen_incremental_pkg class has been added"
+else
+    echo "inherit qti_gen_incremental_pkg" >> $Image_bb
+fi
