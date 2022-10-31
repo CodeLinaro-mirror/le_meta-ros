@@ -6,5 +6,11 @@ inherit packagegroup
 PACKAGES = "${PN}"
 
 RDEPENDS_${PN} = "\
-        desktop \
+		ros-base \
+		kobuki-core \
+		kobuki-firmware \
+		kobuki-ros \
+		kobuki-ros-interfaces \
+		rplidar-ros \
+		navigation2 \
 "
