@@ -30,4 +30,6 @@ RDEPENDS_${PN}-samples = "\
 	demo-nodes-cpp \
 	example-interfaces \
 	logging-demo \
+	composition \
+	examples-rclcpp-minimal-action-server \
 "
