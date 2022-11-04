@@ -37,8 +37,10 @@ python do_gen_incremental_pkg() {
         oe.path.remove(ros_ipk_dir)
     bb.utils.mkdirhier(ros_ipk_dir)
 
+    file_ipk_list = open(os.path.join(ros_ipk_dir, 'package_list.txt'), 'a')
     for pkg in incremental_pkgs:
         if len(pkg.split()):
+            file_ipk_list.write(pkg.split()[0] + '\n')
             for suffix in pn_suffixs:
                 # PF: Specifies the recipe or package name and includes all version and revision numbers
                 # (i.e. glibc-2.13-r20+svnr15508/ and bash-4.2-r1/). This variable is comprised of the
@@ -47,13 +49,14 @@ python do_gen_incremental_pkg() {
                 file_full_path = os.path.join(d.getVar('DEPLOY_DIR_IPK'), pkg.split()[1], file_name)
                 if os.path.isfile(file_full_path):
                     bb.utils.copyfile(file_full_path, os.path.join(ros_ipk_dir, file_name))
-
+    file_ipk_list.close()
     import subprocess
 
-    tarball_file = os.path.join(artifacts_dir, 'ros_ipk.tar.gz')
+    tarball_file = os.path.join(artifacts_dir, 'ros2_foxy_sdk.tar.gz')
     if os.path.exists(tarball_file):
         os.remove(tarball_file)
-    ret = subprocess.call(['tar', '-czf', tarball_file, '-C', artifacts_dir, 'ros_ipk'])
+    cmd = ['tar', '-czf', tarball_file, '-C', artifacts_dir, 'ros_ipk']
+    ret = subprocess.call(cmd)
     if ret != 0:
         bb.error('Failed to run %s!' % cmd)
 }
