@@ -25,6 +25,10 @@ RDEPENDS_${PN}-kobuki = "\
 RDEPENDS_${PN}-navigation = "\
 	rplidar-ros \
 	navigation2 \
+	rcl-logging-noop \
+	console-bridge \
+	libtinyxml2-dev \
+	libyaml-dev \
 "
 RDEPENDS_${PN}-samples = "\
 	demo-nodes-cpp \
