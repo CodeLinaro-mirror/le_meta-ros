@@ -27,6 +27,7 @@ RDEPENDS_${PN}-navigation = "\
 	navigation2 \
 	rcl-logging-noop \
 	console-bridge \
+	cv-bridge \
 	libtinyxml2-dev \
 	libyaml-dev \
 "
