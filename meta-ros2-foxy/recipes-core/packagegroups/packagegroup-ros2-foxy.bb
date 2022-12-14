@@ -56,4 +56,5 @@ RDEPENDS_${PN}-turtlebot3 = "\
 	turtlebot3-navigation2 \
 	turtlebot3-node \
 	turtlebot3-teleop \
+	python3-terminal \
 "
