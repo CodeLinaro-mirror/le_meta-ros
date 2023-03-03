@@ -6,3 +6,5 @@ inherit python3targetconfig
 ROS_BUILDTOOL_DEPENDS += " \
     rosidl-generator-py-native \
 "
+
+CXXFLAGS += "-fPIC"
