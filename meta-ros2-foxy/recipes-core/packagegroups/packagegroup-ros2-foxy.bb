@@ -12,6 +12,7 @@ RDEPENDS:${PN} = "\
         ros-base \
         rplidar-ros \
         ${PN}-samples \
+        graphviz \
 "
 
 RDEPENDS:${PN}-samples = "\
