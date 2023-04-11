@@ -13,7 +13,16 @@ RDEPENDS:${PN} = "\
     ros-base \
     rplidar-ros \
     ${PN}-samples \
-"
+    graphviz \
+    rosidl-default-generators \
+    nav2-msgs \
+    ament-lint-auto \
+    ament-lint-common \
+    ament-cmake-auto \
+    ament-cmake-ros \
+    rcl-logging-noop \
+    image-transport \
+    "
 
 RDEPENDS:${PN}-samples = "\
     demo-nodes-cpp \
@@ -22,4 +31,6 @@ RDEPENDS:${PN}-samples = "\
     composition \
     examples-rclcpp-minimal-action-server \
     action-tutorials-cpp \
+    examples-rclcpp-minimal-publisher \
+    examples-rclcpp-minimal-subscriber \
 "
