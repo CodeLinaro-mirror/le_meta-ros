@@ -22,6 +22,8 @@ RDEPENDS:${PN} = "\
     ament-cmake-ros \
     rcl-logging-noop \
     image-transport \
+    negotiated \
+    negotiated-interfaces \
     "
 
 RDEPENDS:${PN}-samples = "\
@@ -33,4 +35,5 @@ RDEPENDS:${PN}-samples = "\
     action-tutorials-cpp \
     examples-rclcpp-minimal-publisher \
     examples-rclcpp-minimal-subscriber \
+    negotiated-examples \
 "
