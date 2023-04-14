@@ -1,0 +1,29 @@
+From edf8bb304c17e05a316bb7b86b0abe3b930938bb Mon Sep 17 00:00:00 2001
+From: Jiaxing Shi <quic_jiaxshi@quicinc.com>
+Date: Fri, 14 Apr 2023 16:24:03 +0800
+Subject: [PATCH] CMakeLists.txt: Add target dependency
+
+libzstd should be linked to target librabry.
+
+Signed-off-by: Jiaxing Shi <quic_jiaxshi@quicinc.com>
+---
+ CMakeLists.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b4f135bf0..6a5a1cde9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -37,7 +37,8 @@ target_include_directories(${PROJECT_NAME}
+   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
+ ament_target_dependencies(${PROJECT_NAME}
+   rcpputils
+-  rosbag2_compression)
++  rosbag2_compression
++  ZSTD)
+ target_compile_definitions(${PROJECT_NAME} PRIVATE ROSBAG2_COMPRESSION_ZSTD_BUILDING_DLL)
+ pluginlib_export_plugin_description_file(rosbag2_compression plugin_description.xml)
+ 
+-- 
+2.25.1
+
