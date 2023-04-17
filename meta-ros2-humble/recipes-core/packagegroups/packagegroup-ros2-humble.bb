@@ -24,7 +24,9 @@ RDEPENDS:${PN} = "\
     image-transport \
     negotiated \
     negotiated-interfaces \
-    "
+    cv-bridge \
+    cartographer \
+"
 
 RDEPENDS:${PN}-samples = "\
     demo-nodes-cpp \
