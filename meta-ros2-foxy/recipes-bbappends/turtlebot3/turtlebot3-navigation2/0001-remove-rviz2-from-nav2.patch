@@ -1,0 +1,42 @@
+From 7cc6e7541c5f34d5328030813e2533ad15baf54c Mon Sep 17 00:00:00 2001
+From: zhengjia zhu <quic_zhezhu@quicinc.com>
+Date: Tue, 18 Apr 2023 16:17:48 +0800
+Subject: [PATCH] remove-rviz2
+
+Signed-off-by: zhengjia zhu <quic_zhezhu@quicinc.com>
+---
+ launch/navigation2.launch.py | 13 -------------
+ 1 file changed, 13 deletions(-)
+
+diff --git a/launch/navigation2.launch.py b/launch/navigation2.launch.py
+index 303a171..7a84100 100644
+--- a/launch/navigation2.launch.py
++++ b/launch/navigation2.launch.py
+@@ -46,11 +46,6 @@ def generate_launch_description():
+
+     nav2_launch_file_dir = os.path.join(get_package_share_directory('nav2_bringup'), 'launch')
+
+-    rviz_config_dir = os.path.join(
+-        get_package_share_directory('nav2_bringup'),
+-        'rviz',
+-        'nav2_default_view.rviz')
+-
+     return LaunchDescription([
+         DeclareLaunchArgument(
+             'map',
+@@ -74,12 +69,4 @@ def generate_launch_description():
+                 'use_sim_time': use_sim_time,
+                 'params': param_dir}.items(),
+         ),
+-
+-        Node(
+-            package='rviz2',
+-            node_executable='rviz2',
+-            node_name='rviz2',
+-            arguments=['-d', rviz_config_dir],
+-            parameters=[{'use_sim_time': use_sim_time}],
+-            output='screen'),
+     ])
+--
+2.17.1
+
