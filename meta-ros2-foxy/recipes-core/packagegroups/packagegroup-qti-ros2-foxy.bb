@@ -16,6 +16,9 @@ RDEPENDS:${PN} = "\
 
 RDEPENDS:${PN}-samples = "\
     rplidar-ros2 \
+    realsense2-camera \
+    realsense2-description \
+    realsense2-camera-msgs \
     demo-nodes-cpp \
     example-interfaces \
     logging-demo \
