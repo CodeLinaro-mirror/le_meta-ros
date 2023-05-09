@@ -9,17 +9,26 @@ PACKAGES = "\
         ${PN}-samples \
         ${PN}-navigation \
         ${PN}-turtlebot3 \
+        ${PN}-realsense2-camera \
 "
 
 RDEPENDS:${PN} = "\
         ros-base \
+        ros-workspace \
         rplidar-ros \
+        ${PN}-realsense2-camera \
         ${PN}-samples \
         graphviz \
         image-transport \
         cv-bridge \
         ${PN}-navigation \
         ${PN}-turtlebot3 \
+"
+
+RDEPENDS:${PN}-realsense2-camera = " \
+        realsense2-camera \
+        realsense2-description \
+        realsense2-camera-msgs \
 "
 
 RDEPENDS:${PN}-navigation = "\
