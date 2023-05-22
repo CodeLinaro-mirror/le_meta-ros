@@ -27,6 +27,7 @@ RDEPENDS:${PN} = "\
     negotiated-interfaces \
     cv-bridge \
     cartographer \
+    domain-bridge \
 "
 
 RDEPENDS:${PN}-samples = "\
