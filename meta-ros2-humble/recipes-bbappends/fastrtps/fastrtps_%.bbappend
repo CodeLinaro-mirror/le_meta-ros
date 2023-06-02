@@ -3,6 +3,8 @@
 inherit ros_insane_dev_so
 
 FILES:${PN} += "${prefix}/tools"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
+SRC_URI += "file://0001-remove-try_run-for-cross-compiling.patch"
 
 # rosidl-typesupport-fastrtps-cpp/1.0.2-1-r0/recipe-sysroot/usr/share/fastrtps/cmake/fast-discovery-server-targets.cmake:70
 # expects the binary to exist:

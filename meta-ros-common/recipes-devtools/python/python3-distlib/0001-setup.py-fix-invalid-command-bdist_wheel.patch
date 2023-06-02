@@ -1,0 +1,21 @@
+From: Peng Wang <quic_penwang@quicinc.com>
+Date: Thu, 18 May 2023 13:08:59 +0800
+Subject: [PATCH] Fix invalid command bdist_wheel issue
+
+Fix invalid command bdist_wheel issue
+
+Signed-off-by: Peng Wang <quic_penwang@quicinc.com>
+---
+Index: distlib-0.3.3/setup.py
+===================================================================
+--- distlib-0.3.3.orig/setup.py
++++ distlib-0.3.3/setup.py
+@@ -4,6 +4,8 @@
+ # Licensed to the Python Software Foundation under a contributor agreement.
+ # See LICENSE.txt and CONTRIBUTORS.txt.
+ #
++import setuptools
++from distutils.core import setup
+
+ import distutils.core
+ from os.path import join, dirname

@@ -5,4 +5,4 @@ inherit pkgconfig
 DEPENDS += "libyaml"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
-SRC_URI += "file://0001-CMakeLists.txt-use-pkg-config-to-find-yaml.patch"
+SRC_URI += "file://0001-CMakeLists.txt-fix-libyaml-not-found.patch"

@@ -1,0 +1,28 @@
+From 0012905e65f464201632df5efbb7d00878407005 Mon Sep 17 00:00:00 2001
+From: Peng Wang <quic_penwang@quicinc.com>
+Date: Thu, 18 May 2023 13:08:59 +0800
+Subject: [PATCH] Fix libyaml not found issues
+
+fix libyaml not found issues when build standard SDK
+
+Signed-off-by: Peng Wang <quic_penwang@quicinc.com>
+---
+ CMakeLists.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 96ef1b3e..7ee70d19 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -6,6 +6,9 @@ find_package(ament_cmake_ros REQUIRED)
+ find_package(rcutils REQUIRED)
+ find_package(rmw REQUIRED)
+ find_package(libyaml_vendor REQUIRED)
++find_library(LIBYAML_LIBRARIES NAMES yaml libyaml)
++add_library(yaml SHARED IMPORTED)
++set_property(TARGET yaml APPEND PROPERTY IMPORTED_LOCATION "${LIBYAML_LIBRARIES}")
+
+ # Default to C++14
+ if(NOT CMAKE_CXX_STANDARD)
+--
+2.25.1
