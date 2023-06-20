@@ -45,8 +45,8 @@ DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
 RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
-ROS_BRANCH ?= "branch=ros2"
-SRC_URI = "git://github.com/Slamtec/rplidar_ros;${ROS_BRANCH};protocol=https"
+ROS_BRANCH ?= "branch=source/ros2"
+SRC_URI = "git://git.codelinaro.org/clo/le/platform/external/rplidar_ros;${ROS_BRANCH};protocol=https"
 SRCREV = "5f56676005520465b88a3e441d39f86faaf3d05c"
 S = "${WORKDIR}/git"
 
