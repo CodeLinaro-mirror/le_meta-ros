@@ -15,7 +15,9 @@ RDEPENDS:${PN} = "\
         ros-base \
         rplidar-ros \
         ${PN}-samples \
-	graphviz \
+        graphviz \
+        image-transport \
+        cv-bridge \
         ${PN}-navigation \
         ${PN}-turtlebot3 \
 "
