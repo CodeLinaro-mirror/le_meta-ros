@@ -17,9 +17,9 @@ ROS_CN = "lanelet2"
 ROS_BPN = "lanelet2_io"
 
 ROS_BUILD_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_pugixml-dev} \
     boost \
     lanelet2-core \
+    pugixml \
 "
 
 ROS_BUILDTOOL_DEPENDS = " \
@@ -28,9 +28,9 @@ ROS_BUILDTOOL_DEPENDS = " \
 "
 
 ROS_EXPORT_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_pugixml-dev} \
     boost \
     lanelet2-core \
+    pugixml \
 "
 
 ROS_BUILDTOOL_EXPORT_DEPENDS = " \
@@ -38,9 +38,9 @@ ROS_BUILDTOOL_EXPORT_DEPENDS = " \
 "
 
 ROS_EXEC_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_pugixml-dev} \
     boost \
     lanelet2-core \
+    pugixml \
 "
 
 # Currently informational only -- see http://www.ros.org/reps/rep-0149.html#dependency-tags.
@@ -53,7 +53,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
+RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/fzi-forschungszentrum-informatik/lanelet2-release/archive/release/foxy/lanelet2_io/1.1.1-1.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/lanelet2_io"
@@ -61,6 +61,6 @@ SRC_URI = "git://github.com/fzi-forschungszentrum-informatik/lanelet2-release;${
 SRCREV = "2186983054bde54a0b9633c0b63a52de4ea9460f"
 S = "${WORKDIR}/git"
 
-ROS_BUILD_TYPE = "catkin"
+ROS_BUILD_TYPE = "ament_cmake"
 
 inherit ros_${ROS_BUILD_TYPE}

@@ -10,15 +10,17 @@ AUTHOR = "Olivier Stasse <ostasse@laas.fr>"
 ROS_AUTHOR = "Gabriele Buondonno"
 HOMEPAGE = "git@github.com:stack-of-tasks/eiquadprog.git"
 SECTION = "devel"
-LICENSE = "LGPL-2"
+# Original license in package.xml, joined with "&" when multiple license tags were used:
+#         "LGPLv3"
+LICENSE = "LGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://package.xml;beginline=9;endline=9;md5=b691248d2f70cdaeeaf13696ada5d47c"
 
 ROS_CN = "eiquadprog"
 ROS_BPN = "eiquadprog"
 
 ROS_BUILD_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_doxygen} \
     boost \
+    doxygen \
     git \
     graphviz \
     libeigen \
@@ -51,7 +53,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
+RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/stack-of-tasks/eiquadprog-ros-release/archive/release/foxy/eiquadprog/1.2.2-1.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/eiquadprog"

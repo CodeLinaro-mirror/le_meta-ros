@@ -17,11 +17,11 @@ ROS_CN = "geographic_info"
 ROS_BPN = "geodesy"
 
 ROS_BUILD_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_python3-catkin-pkg} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_python3-pyproj} \
     angles \
     geographic-msgs \
     geometry-msgs \
+    python3-catkin-pkg \
+    python3-pyproj \
     sensor-msgs \
     unique-identifier-msgs \
 "
@@ -31,10 +31,10 @@ ROS_BUILDTOOL_DEPENDS = " \
 "
 
 ROS_EXPORT_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_python3-pyproj} \
     angles \
     geographic-msgs \
     geometry-msgs \
+    python3-pyproj \
     sensor-msgs \
     unique-identifier-msgs \
 "
@@ -42,10 +42,10 @@ ROS_EXPORT_DEPENDS = " \
 ROS_BUILDTOOL_EXPORT_DEPENDS = ""
 
 ROS_EXEC_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_python3-pyproj} \
     angles \
     geographic-msgs \
     geometry-msgs \
+    python3-pyproj \
     sensor-msgs \
     unique-identifier-msgs \
 "
@@ -58,7 +58,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
+RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/ros-geographic-info/geographic_info-release/archive/release/foxy/geodesy/1.0.4-1.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/geodesy"

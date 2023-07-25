@@ -10,7 +10,9 @@ AUTHOR = "Martin Günther <martin.guenther@dfki.de>"
 ROS_AUTHOR = "Phidgets Inc."
 HOMEPAGE = "http://ros.org/wiki/phidgets_drivers"
 SECTION = "devel"
-LICENSE = "BSD"
+# Original license in package.xml, joined with "&" when multiple license tags were used:
+#         "BSD, LGPL"
+LICENSE = "BSD-&-LGPL"
 LIC_FILES_CHKSUM = "file://package.xml;beginline=10;endline=10;md5=9b8b2c2c843b0cb5803c38944da723d5"
 
 ROS_CN = "phidgets_drivers"
@@ -51,7 +53,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
+RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/ros2-gbp/phidgets_drivers-release/archive/release/foxy/phidgets_drivers/2.0.2-1.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/phidgets_drivers"

@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=41bb7e40692720ea7d7b034dc4afd191"
 
 # matches with tag v1.12.8
 SRCREV = "e984c17fc95e8e641e07d6b2f17567854ede543d"
-SRC_URI = "git://github.com/OGRECave/ogre;protocol=https \
+SRC_URI = "git://github.com/OGRECave/ogre;protocol=https;branch=master \
     file://0001-CMakeLists.txt-don-t-set-RPATH.patch \
 "
 
@@ -18,7 +18,7 @@ inherit cmake features_check
 
 REQUIRED_DISTRO_FEATURES = "x11"
 
-DEPENDS = "zlib libx11 pugixml"
+DEPENDS = "zlib libx11 pugixml freetype ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'virtual/libgl libglu', '', d)}"
 
 # extra flags from rviz-ogre-vendor ExternalProject_Add in:
 # https://github.com/ros2/rviz/blob/16ad728224246ac8361e7073e1c89baec5a0eaf1/rviz_ogre_vendor/CMakeLists.txt#L162
@@ -41,5 +41,5 @@ EXTRA_OECMAKE_RVIZ_OGRE_VENDOR = " \
 
 EXTRA_OECMAKE += "${EXTRA_OECMAKE_RVIZ_OGRE_VENDOR}"
 
-FILES_${PN}-dev += "${libdir}/OGRE/cmake ${libdir}/OGRE/*${SOLIBSDEV}"
-FILES_${PN} += "${datadir}/OGRE ${libdir}/OGRE"
+FILES:${PN}-dev += "${libdir}/OGRE/cmake ${libdir}/OGRE/*${SOLIBSDEV}"
+FILES:${PN} += "${datadir}/OGRE ${libdir}/OGRE"

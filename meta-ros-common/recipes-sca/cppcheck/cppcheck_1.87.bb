@@ -19,7 +19,7 @@ do_compile() {
 	oe_runmake
 }
 
-FILES_${PN} = "${bindir}/** ${datadir}"
+FILES:${PN} = "${bindir}/** ${datadir}"
 
 do_install() {
     install -d ${D}${bindir}
@@ -39,6 +39,7 @@ SRC_URI = " \
     git://github.com/danmar/cppcheck;${ROS_BRANCH};protocol=https \
     file://0001-makefile.patch \
     file://0002-pkgconfig-instaed-of-pcre-config.patch \
+    file://0001-Fix-compilation-with-recent-glibc-where-SIGSTKSZ-is-.patch \
     file://cppcheck.sca.description \
 "
 

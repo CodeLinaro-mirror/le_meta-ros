@@ -10,6 +10,8 @@ AUTHOR = "Sean Kelly <sean.kelly@ifm.com>"
 ROS_AUTHOR = "Tom Panzarella <tom@boxrobotics.ai>"
 HOMEPAGE = "https://github.com/ifm/ifm3d"
 SECTION = "devel"
+# Original license in package.xml, joined with "&" when multiple license tags were used:
+#         "Apache 2.0"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://package.xml;beginline=8;endline=8;md5=3dce4ba60d7e51ec64f3c3dc18672dd3"
 
@@ -17,12 +19,12 @@ ROS_CN = "ifm3d_core"
 ROS_BPN = "ifm3d_core"
 
 ROS_BUILD_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_libxmlrpc-c++} \
     boost \
     curl \
     cv-bridge \
     glog \
     pcl \
+    xmlrpc-c \
 "
 
 ROS_BUILDTOOL_DEPENDS = " \
@@ -34,11 +36,11 @@ ROS_EXPORT_DEPENDS = ""
 ROS_BUILDTOOL_EXPORT_DEPENDS = ""
 
 ROS_EXEC_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_libxmlrpc-c++} \
     curl \
     cv-bridge \
     glog \
     pcl \
+    xmlrpc-c \
 "
 
 # Currently informational only -- see http://www.ros.org/reps/rep-0149.html#dependency-tags.
@@ -49,7 +51,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
+RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/ifm/ifm3d-release/archive/release/foxy/ifm3d_core/0.18.0-4.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/ifm3d_core"

@@ -6,12 +6,11 @@ PYPI_PACKAGE = "catkin_pkg"
 
 DEPENDS = "${PYTHON_PN}-pyparsing"
 
-SRC_URI[md5sum] = "10be85558c33e6406bb105becff4e7d0"
-SRC_URI[sha256sum] = "18305748ae2de7ca7b10a560b146a9c0cb566130b6f4a4825f6f38595bf8488c"
+SRC_URI[sha256sum] = "f26d22cc5d8cb54f681f13fec4d06637b4983d493aa054f8e69ba888d632c6b4"
 
 inherit pypi
 
-RDEPENDS_${PN} = "${PYTHON_PN}-unixadmin ${PYTHON_PN}-pyparsing ${PYTHON_PN}-dateutil ${PYTHON_PN}-docutils"
-RDEPENDS_${PN}_class-native = ""
+RDEPENDS:${PN} = "${PYTHON_PN}-unixadmin ${PYTHON_PN}-pyparsing ${PYTHON_PN}-dateutil ${PYTHON_PN}-docutils"
+RDEPENDS:${PN}:class-native = ""
 
 BBCLASSEXTEND = "native nativesdk"

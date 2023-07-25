@@ -10,7 +10,7 @@ AUTHOR = "Martin Günther <martin.guenther@dfki.de>"
 ROS_AUTHOR = "Alexander Bubeck"
 HOMEPAGE = "http://ros.org/wiki/libphidget22"
 SECTION = "devel"
-LICENSE = "LGPL-2"
+LICENSE = "LGPL"
 LIC_FILES_CHKSUM = "file://package.xml;beginline=13;endline=13;md5=46ee8693f40a89a31023e97ae17ecf19"
 
 ROS_CN = "phidgets_drivers"
@@ -29,7 +29,7 @@ ROS_EXPORT_DEPENDS = ""
 ROS_BUILDTOOL_EXPORT_DEPENDS = ""
 
 ROS_EXEC_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_libusb-1.0} \
+    libusb1 \
 "
 
 # Currently informational only -- see http://www.ros.org/reps/rep-0149.html#dependency-tags.
@@ -40,7 +40,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
+RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/ros2-gbp/phidgets_drivers-release/archive/release/foxy/libphidget22/2.0.2-1.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/libphidget22"

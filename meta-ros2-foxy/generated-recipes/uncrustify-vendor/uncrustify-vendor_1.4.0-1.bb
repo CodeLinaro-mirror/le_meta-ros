@@ -9,14 +9,16 @@ DESCRIPTION = "Wrapper around uncrustify, providing nothing but a dependency on 
 AUTHOR = "Steven! Ragnarök <steven@openrobotics.org>"
 HOMEPAGE = "https://github.com/uncrustify/uncrustify"
 SECTION = "devel"
-LICENSE = "Apache-2.0 & GPL-2"
+# Original license in package.xml, joined with "&" when multiple license tags were used:
+#         "Apache License 2.0 & GNU General Public License v2.0"
+LICENSE = "Apache-2.0 & GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://package.xml;beginline=13;endline=13;md5=f12ef8c0445c08084ae92cf2dcb7ee92"
 
 ROS_CN = "uncrustify_vendor"
 ROS_BPN = "uncrustify_vendor"
 
 ROS_BUILD_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_uncrustify} \
+    ${ROS_UNRESOLVED_DEP-uncrustify} \
 "
 
 ROS_BUILDTOOL_DEPENDS = " \
@@ -24,13 +26,13 @@ ROS_BUILDTOOL_DEPENDS = " \
 "
 
 ROS_EXPORT_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_uncrustify} \
+    ${ROS_UNRESOLVED_DEP-uncrustify} \
 "
 
 ROS_BUILDTOOL_EXPORT_DEPENDS = ""
 
 ROS_EXEC_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_uncrustify} \
+    ${ROS_UNRESOLVED_DEP-uncrustify} \
 "
 
 # Currently informational only -- see http://www.ros.org/reps/rep-0149.html#dependency-tags.
@@ -41,7 +43,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
+RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/ros2-gbp/uncrustify_vendor-release/archive/release/foxy/uncrustify_vendor/1.4.0-1.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/uncrustify_vendor"

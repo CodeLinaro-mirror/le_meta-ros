@@ -9,6 +9,8 @@ DESCRIPTION = "Lightweight aggregation utilities to collect statistics and measu
 AUTHOR = "ROS Tooling Working Group <ros-tooling@googlegroups.com>"
 HOMEPAGE = "https://wiki.ros.org"
 SECTION = "devel"
+# Original license in package.xml, joined with "&" when multiple license tags were used:
+#         "Apache License 2.0"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://package.xml;beginline=8;endline=8;md5=12c26a18c7f493fdc7e8a93b16b7c04f"
 
@@ -56,7 +58,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
+RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/ros-tooling/libstatistics_collector-release/archive/release/foxy/libstatistics_collector/1.0.1-1.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/libstatistics_collector"

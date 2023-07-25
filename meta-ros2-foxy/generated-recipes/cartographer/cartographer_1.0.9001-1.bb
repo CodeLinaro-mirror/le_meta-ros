@@ -10,6 +10,8 @@ AUTHOR = "Chris Lalancette <clalancette@openrobotics.org>"
 ROS_AUTHOR = "The Cartographer Authors <google-cartographer@googlegroups.com>"
 HOMEPAGE = "https://github.com/googlecartographer/cartographer"
 SECTION = "devel"
+# Original license in package.xml, joined with "&" when multiple license tags were used:
+#         "Apache 2.0"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://package.xml;beginline=9;endline=9;md5=b73cebba72f83c5afebf178817283e37"
 
@@ -17,8 +19,7 @@ ROS_CN = "cartographer"
 ROS_BPN = "cartographer"
 
 ROS_BUILD_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_libboost-iostreams-dev} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_python3-sphinx} \
+    boost \
     cairo \
     ceres-solver \
     gflags \
@@ -27,6 +28,7 @@ ROS_BUILD_DEPENDS = " \
     libeigen \
     lua \
     protobuf \
+    python3-sphinx \
 "
 
 ROS_BUILDTOOL_DEPENDS = " \
@@ -34,7 +36,7 @@ ROS_BUILDTOOL_DEPENDS = " \
 "
 
 ROS_EXPORT_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_libboost-iostreams-dev} \
+    boost \
     cairo \
     ceres-solver \
     gflags \
@@ -47,7 +49,7 @@ ROS_EXPORT_DEPENDS = " \
 ROS_BUILDTOOL_EXPORT_DEPENDS = ""
 
 ROS_EXEC_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_libboost-iostreams-dev} \
+    boost \
     cairo \
     ceres-solver \
     gflags \
@@ -65,7 +67,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
+RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/ros2-gbp/cartographer-release/archive/release/foxy/cartographer/1.0.9001-1.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/cartographer"

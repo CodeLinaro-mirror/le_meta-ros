@@ -19,10 +19,10 @@ ROS_BPN = "mrt_cmake_modules"
 ROS_BUILD_DEPENDS = ""
 
 ROS_BUILDTOOL_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_python3-rospkg-native} \
     ament-cmake-core-native \
     python3-catkin-pkg-native \
     python3-pyyaml-native \
+    python3-rospkg-native \
     python3-setuptools-native \
     ros-environment-native \
 "
@@ -30,11 +30,11 @@ ROS_BUILDTOOL_DEPENDS = " \
 ROS_EXPORT_DEPENDS = ""
 
 ROS_BUILDTOOL_EXPORT_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_lcov-native} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_python3-rospkg-native} \
     gtest-vendor-native \
+    lcov-native \
     python3-catkin-pkg-native \
     python3-pyyaml-native \
+    python3-rospkg-native \
     python3-setuptools-native \
     ros-environment-native \
 "
@@ -49,7 +49,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
+RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/KIT-MRT/mrt_cmake_modules-release/archive/release/foxy/mrt_cmake_modules/1.0.8-1.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/mrt_cmake_modules"
@@ -57,6 +57,6 @@ SRC_URI = "git://github.com/KIT-MRT/mrt_cmake_modules-release;${ROS_BRANCH};prot
 SRCREV = "9a6fca69ada5a1fb57ba99f7228306498f065666"
 S = "${WORKDIR}/git"
 
-ROS_BUILD_TYPE = "catkin"
+ROS_BUILD_TYPE = "ament_cmake"
 
 inherit ros_${ROS_BUILD_TYPE}

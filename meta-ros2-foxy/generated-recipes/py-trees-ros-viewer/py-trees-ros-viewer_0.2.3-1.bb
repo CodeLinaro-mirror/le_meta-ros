@@ -17,9 +17,9 @@ ROS_CN = "py_trees_ros_viewer"
 ROS_BPN = "py_trees_ros_viewer"
 
 ROS_BUILD_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_pyqt5-dev-tools} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_qttools5-dev-tools} \
+    ${PYTHON_PN}-pyqt5 \
     python3-setuptools \
+    qttools \
 "
 
 ROS_BUILDTOOL_DEPENDS = ""
@@ -29,10 +29,10 @@ ROS_EXPORT_DEPENDS = ""
 ROS_BUILDTOOL_EXPORT_DEPENDS = ""
 
 ROS_EXEC_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_python3-pyqt5.qtwebengine} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_python3-qt5-bindings} \
+    ${PYTHON_PN}-pyqt5 \
     py-trees-js \
     py-trees-ros-interfaces \
+    python3-pyqt5 \
     rclpy \
     unique-identifier-msgs \
 "
@@ -45,7 +45,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
+RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/stonier/py_trees_ros_viewer-release/archive/release/foxy/py_trees_ros_viewer/0.2.3-1.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/py_trees_ros_viewer"

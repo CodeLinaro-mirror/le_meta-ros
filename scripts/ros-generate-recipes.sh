@@ -14,10 +14,10 @@
 # This script will abort if Git detects any uncommitted modifications, eg, from a previous run that did not complete or untracked
 # files (which would otherwise appear in superflore-change-summary.txt).
 #
-# Copyright (c) 2019-2020 LG Electronics, Inc.
+# Copyright (c) 2019-2021 LG Electronics, Inc.
 
 readonly SCRIPT_NAME="ros-generate-recipes"
-readonly SCRIPT_VERSION="1.5.3"
+readonly SCRIPT_VERSION="1.7.0"
 
 # Files under ros/rosdistro/rosdep that we care about. Keep in sync with setting in ros-generate-cache.sh .
 readonly ROSDEP_YAML_BASENAMES="base python ruby"
@@ -47,17 +47,15 @@ if [ -z "$SUPERFLORE_GEN_OE_RECIPES" ]; then
 fi
 
 ROS_DISTRO=$1
-# ROS_VERSION and ROS_PYTHON_VERSION must be in the environment as they appear in "conditional" attributes. Keep this block in
-# sync with the one in ros-generate-cache.sh .
+
+# Keep this block in sync with the one in ros-generate-cache.sh .
 case $ROS_DISTRO in
     "melodic"|"noetic")
-        export ROS_VERSION="1"
-        export ROS_PYTHON_VERSION="2"
+        ROS_VERSION="1"
         ;;
 
-    "dashing"|"eloquent"|"foxy"|"rolling")
-        export ROS_VERSION="2"
-        export ROS_PYTHON_VERSION="3"
+    "dashing"|"eloquent"|"foxy"|"galactic"|"rolling")
+        ROS_VERSION="2"
         ;;
 
     *)  echo "ABORT: Unrecognized ROS_DISTRO: $ROS_DISTRO"
@@ -69,11 +67,6 @@ only_option=""
 if [ $# -gt 1 ]; then
     shift
     only_option="--only $*"
-fi
-
-if [ -n "$(git status --porcelain=v1)" ]; then
-    echo "ABORT: Uncommitted modifications detected by Git -- perhaps invoke 'git reset --hard'?"
-    exit 1
 fi
 
 generated=meta-ros$ROS_VERSION-$ROS_DISTRO/files/$ROS_DISTRO/generated
@@ -111,6 +104,11 @@ case $ROS_DISTRO_RELEASE_DATE in
         ;;
 esac
 
+# Keep this block in sync with the one in ros-generate-cache.sh .
+if [ -n "$(git status --porcelain=v1)" ]; then
+    echo "ABORT: Uncommitted modifications detected by Git -- perhaps invoke 'git reset --hard'?"
+    exit 1
+fi
 
 abort=false
 for f in $ROSDEP_YAML_BASENAMES; do

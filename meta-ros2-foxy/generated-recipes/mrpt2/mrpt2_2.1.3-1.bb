@@ -17,7 +17,6 @@ ROS_CN = "mrpt2"
 ROS_BPN = "mrpt2"
 
 ROS_BUILD_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_libxxf86vm} \
     assimp \
     ffmpeg \
     freeglut \
@@ -27,6 +26,7 @@ ROS_BUILD_DEPENDS = " \
     libpcap \
     libusb1 \
     libxrandr \
+    libxxf86vm \
     opencv \
     suitesparse-cholmod \
     suitesparse-cxsparse \
@@ -40,7 +40,6 @@ ROS_BUILDTOOL_DEPENDS = " \
 "
 
 ROS_EXPORT_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_libxxf86vm} \
     assimp \
     ffmpeg \
     freeglut \
@@ -50,6 +49,7 @@ ROS_EXPORT_DEPENDS = " \
     libpcap \
     libusb1 \
     libxrandr \
+    libxxf86vm \
     opencv \
     suitesparse-cholmod \
     suitesparse-cxsparse \
@@ -61,7 +61,6 @@ ROS_EXPORT_DEPENDS = " \
 ROS_BUILDTOOL_EXPORT_DEPENDS = ""
 
 ROS_EXEC_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_libxxf86vm} \
     assimp \
     ffmpeg \
     freeglut \
@@ -71,6 +70,7 @@ ROS_EXEC_DEPENDS = " \
     libpcap \
     libusb1 \
     libxrandr \
+    libxxf86vm \
     opencv \
     suitesparse-cholmod \
     suitesparse-cxsparse \
@@ -87,7 +87,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
+RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/mrpt-ros2-pkg-release/mrpt2-release/archive/release/foxy/mrpt2/2.1.3-1.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/mrpt2"

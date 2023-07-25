@@ -10,7 +10,9 @@ AUTHOR = "Alejandro Hernandez <alejandro@osrfoundation.org>"
 ROS_AUTHOR = "Stephen Brawner"
 HOMEPAGE = "http://ros.org/wiki/qt_gui_icons"
 SECTION = "devel"
-LICENSE = "Apache-2.0 & public_domain"
+# Original license in package.xml, joined with "&" when multiple license tags were used:
+#         "Apache License 2.0 & Public Domain"
+LICENSE = "Apache-2.0 & PD"
 LIC_FILES_CHKSUM = "file://package.xml;beginline=6;endline=6;md5=f12ef8c0445c08084ae92cf2dcb7ee92"
 
 ROS_CN = "tango_icons_vendor"
@@ -39,7 +41,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
+RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/ros2-gbp/tango_icons_vendor-release/archive/release/foxy/tango_icons_vendor/0.0.1-1.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/tango_icons_vendor"

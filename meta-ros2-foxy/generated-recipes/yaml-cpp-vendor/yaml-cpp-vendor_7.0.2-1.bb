@@ -9,6 +9,8 @@ DESCRIPTION = "Wrapper around yaml-cpp, it provides a fixed CMake module and an 
 AUTHOR = "William Woodall <william@osrfoundation.org>"
 HOMEPAGE = "https://github.com/jbeder/yaml-cpp"
 SECTION = "devel"
+# Original license in package.xml, joined with "&" when multiple license tags were used:
+#         "Apache License 2.0 & MIT"
 LICENSE = "Apache-2.0 & MIT"
 LIC_FILES_CHKSUM = "file://package.xml;beginline=12;endline=12;md5=f12ef8c0445c08084ae92cf2dcb7ee92"
 
@@ -35,7 +37,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
+RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/ros2-gbp/yaml_cpp_vendor-release/archive/release/foxy/yaml_cpp_vendor/7.0.2-1.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/yaml_cpp_vendor"

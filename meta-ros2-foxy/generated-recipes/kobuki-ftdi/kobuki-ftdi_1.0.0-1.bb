@@ -17,11 +17,10 @@ ROS_CN = "kobuki_ftdi"
 ROS_BPN = "kobuki_ftdi"
 
 ROS_BUILD_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_ftdi-eeprom} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_libftdi-dev} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_libusb-dev} \
     ecl-build \
     ecl-command-line \
+    libftdi \
+    libusb1 \
     pkgconfig \
 "
 
@@ -34,10 +33,9 @@ ROS_EXPORT_DEPENDS = ""
 ROS_BUILDTOOL_EXPORT_DEPENDS = ""
 
 ROS_EXEC_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_ftdi-eeprom} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_libftdi-dev} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_libusb-dev} \
     ecl-command-line \
+    libftdi \
+    libusb1 \
 "
 
 # Currently informational only -- see http://www.ros.org/reps/rep-0149.html#dependency-tags.
@@ -48,7 +46,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
+RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/stonier/kobuki_ftdi-release/archive/release/foxy/kobuki_ftdi/1.0.0-1.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/kobuki_ftdi"

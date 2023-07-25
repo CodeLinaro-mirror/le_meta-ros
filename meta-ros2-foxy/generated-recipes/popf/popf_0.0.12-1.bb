@@ -10,19 +10,21 @@ AUTHOR = "Francisco Martin <fmrico@gmail.com>"
 ROS_AUTHOR = "Marc Hanheide"
 HOMEPAGE = "https://wiki.ros.org"
 SECTION = "devel"
-LICENSE = "GPL-2"
+# Original license in package.xml, joined with "&" when multiple license tags were used:
+#         "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://package.xml;beginline=14;endline=14;md5=2c00b8d2854109dbebef7818b4dae1e2"
 
 ROS_CN = "popf"
 ROS_BPN = "popf"
 
 ROS_BUILD_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_bison} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_coinor-libcbc-dev} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_coinor-libcgl-dev} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_coinor-libclp-dev} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_coinor-libcoinutils-dev} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_flex} \
+    ${ROS_UNRESOLVED_DEP-coinor-libcbc-dev} \
+    ${ROS_UNRESOLVED_DEP-coinor-libcgl-dev} \
+    ${ROS_UNRESOLVED_DEP-coinor-libclp-dev} \
+    ${ROS_UNRESOLVED_DEP-coinor-libcoinutils-dev} \
+    bison \
+    flex \
     rclcpp \
 "
 
@@ -31,24 +33,24 @@ ROS_BUILDTOOL_DEPENDS = " \
 "
 
 ROS_EXPORT_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_bison} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_coinor-libcbc-dev} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_coinor-libcgl-dev} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_coinor-libclp-dev} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_coinor-libcoinutils-dev} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_flex} \
+    ${ROS_UNRESOLVED_DEP-coinor-libcbc-dev} \
+    ${ROS_UNRESOLVED_DEP-coinor-libcgl-dev} \
+    ${ROS_UNRESOLVED_DEP-coinor-libclp-dev} \
+    ${ROS_UNRESOLVED_DEP-coinor-libcoinutils-dev} \
+    bison \
+    flex \
     rclcpp \
 "
 
 ROS_BUILDTOOL_EXPORT_DEPENDS = ""
 
 ROS_EXEC_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_bison} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_coinor-libcbc-dev} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_coinor-libcgl-dev} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_coinor-libclp-dev} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_coinor-libcoinutils-dev} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_flex} \
+    ${ROS_UNRESOLVED_DEP-coinor-libcbc-dev} \
+    ${ROS_UNRESOLVED_DEP-coinor-libcgl-dev} \
+    ${ROS_UNRESOLVED_DEP-coinor-libclp-dev} \
+    ${ROS_UNRESOLVED_DEP-coinor-libcoinutils-dev} \
+    bison \
+    flex \
     rclcpp \
 "
 
@@ -60,7 +62,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
+RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/fmrico/popf-release/archive/release/foxy/popf/0.0.12-1.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/popf"

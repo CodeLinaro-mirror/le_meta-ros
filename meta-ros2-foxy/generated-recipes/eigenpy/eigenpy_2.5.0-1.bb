@@ -17,11 +17,11 @@ ROS_CN = "eigenpy"
 ROS_BPN = "eigenpy"
 
 ROS_BUILD_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_doxygen} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_python3} \
     boost \
+    doxygen \
     git \
     libeigen \
+    python3 \
     python3-numpy \
 "
 
@@ -30,19 +30,19 @@ ROS_BUILDTOOL_DEPENDS = " \
 "
 
 ROS_EXPORT_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_python3} \
     boost \
     libeigen \
+    python3 \
     python3-numpy \
 "
 
 ROS_BUILDTOOL_EXPORT_DEPENDS = ""
 
 ROS_EXEC_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_python3} \
     ament-cmake \
     boost \
     libeigen \
+    python3 \
     python3-numpy \
 "
 
@@ -54,7 +54,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
+RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/ipab-slmc/eigenpy_catkin-release/archive/release/foxy/eigenpy/2.5.0-1.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/eigenpy"

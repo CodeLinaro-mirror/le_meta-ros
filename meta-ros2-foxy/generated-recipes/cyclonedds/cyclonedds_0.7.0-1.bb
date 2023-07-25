@@ -9,7 +9,9 @@ DESCRIPTION = "Eclipse Cyclone DDS is a very performant and robust open-source D
 AUTHOR = "Eclipse Foundation, Inc. <cyclonedds-dev@eclipse.org>"
 HOMEPAGE = "https://projects.eclipse.org/projects/iot.cyclonedds"
 SECTION = "devel"
-LICENSE = "Eclipse-Public-License-2.0 & Eclipse-Distribution-License-1.0"
+# Original license in package.xml, joined with "&" when multiple license tags were used:
+#         "Eclipse Public License 2.0 & Eclipse Distribution License 1.0"
+LICENSE = "EPL-2.0 & Eclipse-Distribution-License-1.0"
 LIC_FILES_CHKSUM = "file://package.xml;beginline=8;endline=8;md5=7532470dee289492e850d7d3e8a32b32"
 
 ROS_CN = "cyclonedds"
@@ -20,8 +22,8 @@ ROS_BUILD_DEPENDS = " \
 "
 
 ROS_BUILDTOOL_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_java-native} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_maven-native} \
+    ${ROS_UNRESOLVED_DEP-java-native} \
+    ${ROS_UNRESOLVED_DEP-maven-native} \
     cmake-native \
 "
 
@@ -37,7 +39,7 @@ ROS_EXEC_DEPENDS = " \
 
 # Currently informational only -- see http://www.ros.org/reps/rep-0149.html#dependency-tags.
 ROS_TEST_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_libcunit-dev} \
+    ${ROS_UNRESOLVED_DEP-libcunit-dev} \
 "
 
 DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
@@ -45,7 +47,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
+RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/ros2-gbp/cyclonedds-release/archive/release/foxy/cyclonedds/0.7.0-1.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/cyclonedds"

@@ -8,7 +8,7 @@ PR = "r0"
 
 S = "${WORKDIR}/git"
 
-SRC_URI = "git://github.com/jbeder/${BPN}.git;branch=master;protocol=git"
+SRC_URI = "git://github.com/jbeder/${BPN}.git;branch=master;protocol=https"
 SRCREV = "562aefc114938e388457e6a531ed7b54d9dc1b62"
 
 
@@ -17,7 +17,7 @@ EXTRA_OECMAKE = "-DBUILD_SHARED_LIBS=ON -DYAML_CPP_BUILD_TESTS=OFF -DYAML_CPP_BU
 inherit cmake
 
 PACKAGES =+ "${PN}-gtest"
-FILES_${PN}-gtest += " \
+FILES:${PN}-gtest += " \
     ${libdir}/libgmock_main.so \
     ${libdir}/libgtest_main.so \
     ${libdir}/libgtest.so \

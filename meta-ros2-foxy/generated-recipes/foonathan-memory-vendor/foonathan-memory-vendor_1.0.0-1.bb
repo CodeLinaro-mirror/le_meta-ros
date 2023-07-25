@@ -9,7 +9,9 @@ DESCRIPTION = "Foonathan/memory vendor package for Fast-RTPS."
 AUTHOR = "Miguel Company <miguelcompany@eprosima.com>"
 HOMEPAGE = "https://wiki.ros.org"
 SECTION = "devel"
-LICENSE = "Apache-2.0 & zlib-License"
+# Original license in package.xml, joined with "&" when multiple license tags were used:
+#         "Apache License 2.0 & zlib License"
+LICENSE = "Apache-2.0 & Zlib"
 LIC_FILES_CHKSUM = "file://package.xml;beginline=11;endline=11;md5=401a7342a877608092ef332b6948eb03"
 
 ROS_CN = "foonathan_memory_vendor"
@@ -43,7 +45,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
+RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/ros2-gbp/foonathan_memory_vendor-release/archive/release/foxy/foonathan_memory_vendor/1.0.0-1.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/foonathan_memory_vendor"

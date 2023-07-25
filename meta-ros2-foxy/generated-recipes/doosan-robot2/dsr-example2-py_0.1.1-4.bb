@@ -9,6 +9,8 @@ DESCRIPTION = "The dsr_example2 Python package"
 AUTHOR = "Doosan Robotics <ros.robotics@doosan.com>"
 HOMEPAGE = "https://wiki.ros.org"
 SECTION = "devel"
+# Original license in package.xml, joined with "&" when multiple license tags were used:
+#         "TODO: License declaration"
 LICENSE = "TODO-License-declaration"
 LIC_FILES_CHKSUM = "file://package.xml;beginline=8;endline=8;md5=782925c2d55d09052e1842a0b4886802"
 
@@ -22,7 +24,7 @@ ROS_BUILD_DEPENDS = " \
 "
 
 ROS_BUILDTOOL_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_ament_python-native} \
+    ${ROS_UNRESOLVED_DEP-ament-python-native} \
 "
 
 ROS_EXPORT_DEPENDS = " \
@@ -52,7 +54,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
+RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/doosan-robotics/doosan-robot2-release/archive/release/foxy/dsr_example2_py/0.1.1-4.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/dsr_example2_py"

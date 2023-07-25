@@ -4,7 +4,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
 SRCREV = "cbe9448650176797739dbab13961ef4c07f4290f"
-SRC_URI = "git://github.com/gabime/spdlog.git;protocol=git;branch=v1.x;"
+SRC_URI = "git://github.com/gabime/spdlog.git;protocol=https;branch=v1.x;"
 
 DEPENDS += "fmt"
 
@@ -17,5 +17,5 @@ EXTRA_OECMAKE += "-DSPDLOG_INSTALL=on -DSPDLOG_BUILD_EXAMPLES=off -DSPDLOG_BUILD
 inherit cmake
 
 # Header-only library
-RDEPENDS_${PN}-dev = ""
-RRECOMMENDS_${PN}-dbg = "${PN}-dev (= ${EXTENDPKGV})"
+RDEPENDS:${PN}-dev = ""
+RRECOMMENDS:${PN}-dbg = "${PN}-dev (= ${EXTENDPKGV})"

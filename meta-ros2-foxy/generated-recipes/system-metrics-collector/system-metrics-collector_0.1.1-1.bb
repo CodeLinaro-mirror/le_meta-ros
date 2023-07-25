@@ -9,6 +9,8 @@ DESCRIPTION = "Node and aggregation utilities to measure and publish system metr
 AUTHOR = "ROS Tooling Working Group <ros-tooling@googlegroups.com>"
 HOMEPAGE = "https://wiki.ros.org"
 SECTION = "devel"
+# Original license in package.xml, joined with "&" when multiple license tags were used:
+#         "Apache License 2.0"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://package.xml;beginline=8;endline=8;md5=12c26a18c7f493fdc7e8a93b16b7c04f"
 
@@ -64,7 +66,7 @@ ROS_EXEC_DEPENDS = " \
 
 # Currently informational only -- see http://www.ros.org/reps/rep-0149.html#dependency-tags.
 ROS_TEST_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_python3-retrying} \
+    ${ROS_UNRESOLVED_DEP-python3-retrying} \
     ament-cmake-gtest \
     ament-lint-auto \
     ament-lint-common \
@@ -81,7 +83,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
+RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/ros-tooling/system_metrics_collector-release/archive/release/foxy/system_metrics_collector/0.1.1-1.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/system_metrics_collector"

@@ -17,8 +17,7 @@ ROS_CN = "vision_opencv"
 ROS_BPN = "cv_bridge"
 
 ROS_BUILD_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_libboost-dev} \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_libboost-python-dev} \
+    boost \
     opencv \
     python3-numpy \
     sensor-msgs \
@@ -38,8 +37,8 @@ ROS_EXPORT_DEPENDS = " \
 ROS_BUILDTOOL_EXPORT_DEPENDS = ""
 
 ROS_EXEC_DEPENDS = " \
-    ${ROS_UNRESOLVED_PLATFORM_PKG_libboost-python} \
     ament-index-python \
+    boost \
     opencv \
     python3-numpy \
     sensor-msgs \
@@ -59,7 +58,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
+RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/ros2-gbp/vision_opencv-release/archive/release/foxy/cv_bridge/2.2.1-1.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/cv_bridge"

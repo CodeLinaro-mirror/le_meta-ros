@@ -6,11 +6,8 @@ inherit ros_distro_${ROS_DISTRO}
 
 PACKAGES = "${PN}"
 
-RDEPENDS_${PN} = "\
+RDEPENDS:${PN} = "\
         demo-nodes-cpp \
         ros2run \
         ros2topic \
-        composition \
-        logging-demo \
-        examples-rclcpp-minimal-action-server \
 "

@@ -10,7 +10,7 @@ AUTHOR = "Nick Padilla <nickpadilla@roverrobotics.com>"
 ROS_AUTHOR = "Rover Robotics <info@roverrobotics.com>"
 HOMEPAGE = "https://wiki.ros.org"
 SECTION = "devel"
-LICENSE = "BSD"
+LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://package.xml;beginline=10;endline=10;md5=4633480cdd27d7906aaf3ef4b72014b2"
 
 ROS_CN = "roverrobotics_ros2"
@@ -43,7 +43,7 @@ DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 # don't) so that they're guaranteed to have been staged should this package appear in another's DEPENDS.
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS_${PN} += "${ROS_EXEC_DEPENDS}"
+RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
 # matches with: https://github.com/RoverRobotics-release/roverrobotics_ros2-release/archive/release/foxy/roverrobotics_ros2/0.1.1-2.tar.gz
 ROS_BRANCH ?= "branch=release/foxy/roverrobotics_ros2"
