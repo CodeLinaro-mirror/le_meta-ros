@@ -7,3 +7,4 @@
 # set in ros-distro-platform-preferred-versions.inc .
 
 PREFERRED_VERSION_gtest = "1.11.0"
+PREFERRED_VERSION_python3-paramiko = "2.10.3"
