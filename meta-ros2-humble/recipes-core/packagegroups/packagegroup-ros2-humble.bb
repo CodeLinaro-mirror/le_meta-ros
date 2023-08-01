@@ -11,7 +11,6 @@ PACKAGES = "\
 
 RDEPENDS:${PN} = "\
     ros-base \
-    rplidar-ros \
     rplidar-ros2 \
     ${PN}-samples \
     graphviz \
