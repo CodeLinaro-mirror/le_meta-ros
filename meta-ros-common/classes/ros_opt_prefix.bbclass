@@ -6,12 +6,14 @@
 ros_prefix ?= "${base_prefix}/opt/ros/${ROS_DISTRO}"
 
 ros_bindir = "${ros_prefix}/bin"
+ros_sbindir = "${ros_prefix}/sbin"
 ros_libdir = "${ros_prefix}/${baselib}"
 ros_libexecdir = "${ros_libdir}/${ROS_BPN}"
 ros_includedir = "${ros_prefix}/include"
 ros_datadir = "${ros_prefix}/share"
 ros_sysconfdir = "${ros_prefix}/etc"
 ros_stacksdir = "${ros_prefix}/stacks"
+ros_toolsdir = "${ros_prefix}/tools"
 
 # Used by chrpath.bbclass
 PREPROCESS_RELOCATE_DIRS += " \
@@ -30,11 +32,13 @@ export PYTHONPATH = "${STAGING_DIR_NATIVE}${PYTHON_SITEPACKAGES_DIR}"
 PYTHONPATH:class-native = "${PYTHON_SITEPACKAGES_DIR}"
 
 FILES:${PN} += "\
-    ${ros_bindir} ${ros_libexecdir} ${ros_libdir}/lib*.so \
+    ${ros_bindir}/* ${ros_libexecdir}/* ${ros_libdir}/* \
     ${PYTHON_SITEPACKAGES_DIR} \
     ${ros_datadir} \
     ${ros_sysconfdir} \
     ${ros_stacksdir} \
+    ${ros_toolsdir}/ \
+    ${ros_prefix} \
     "
 
 FILES:${PN}-dev += "\
@@ -65,6 +69,8 @@ SYSROOT_DIRS:append = " \
     ${ros_datadir} \
     ${ros_stacksdir} \
     ${ros_sysconfdir} \
+    ${ros_bindir} \
+    ${ros_sbindir} \
     "
 
 SYSROOT_DIRS_NATIVE:append = " \

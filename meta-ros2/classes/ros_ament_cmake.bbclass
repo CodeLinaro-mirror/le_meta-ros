@@ -19,10 +19,20 @@ EXTRA_OECMAKE:append:class-target = " -DPYTHON_SOABI=${PYTHON_SOABI}"
 #
 #    "Could not find ROS middleware implementation 'NOTFOUND'"
 #
-export AMENT_PREFIX_PATH="${STAGING_DIR_HOST}${prefix};${STAGING_DIR_NATIVE}${prefix}"
+export AMENT_PREFIX_PATH="${STAGING_DIR_HOST}${prefix};${STAGING_DIR_NATIVE}${prefix};${STAGING_DIR_HOST}${ros_prefix};${STAGING_DIR_NATIVE}${ros_prefix}"
 
 inherit cmake python3native
 
 FILES:${PN}:prepend = " \
     ${datadir}/ament_index \
+"
+
+EXTRA_OECMAKE:prepend = "\
+    -DCMAKE_PREFIX_PATH='${STAGING_DIR_HOST}${ros_prefix};${STAGING_DIR_HOST}${prefix}' \
+    -DCMAKE_INSTALL_PREFIX:PATH='${ros_prefix}' \
+"
+
+EXTRA_OECMAKE:prepend:class-native = "\
+    -DCMAKE_PREFIX_PATH='${ros_prefix}' \
+    -DCMAKE_INSTALL_PREFIX:PATH='${ros_prefix}' \
 "
