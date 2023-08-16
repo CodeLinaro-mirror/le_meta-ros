@@ -7,7 +7,7 @@ ROS_AUTHOR = "Slamtec ROS Maintainer <ros@slamtec.com>"
 HOMEPAGE = "https://wiki.ros.org"
 SECTION = "devel"
 LICENSE = "BSD-2-Clause"
-LIC_FILES_CHKSUM = "file://package.xml;beginline=10;endline=10;md5=d566ef916e9dedc494f5f793a6690ba5"
+LIC_FILES_CHKSUM = "file://package.xml;beginline=12;endline=12;md5=d566ef916e9dedc494f5f793a6690ba5"
 
 ROS_CN = "rplidar_ros2"
 ROS_BPN = "rplidar_ros2"
@@ -45,9 +45,9 @@ DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
 RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
-ROS_BRANCH ?= "branch=source/ros2-devel"
-SRC_URI = "git://git.codelinaro.org/clo/le/platform/external/rplidar_ros;${ROS_BRANCH};protocol=https"
-SRCREV = "5f56676005520465b88a3e441d39f86faaf3d05c"
+ROS_BRANCH ?= "branch=ros2-devel"
+SRC_URI = "git://github.com/Slamtec/rplidar_ros;${ROS_BRANCH};protocol=https"
+SRCREV = "61b66940490edfd42411ad67fe99c30dcf0e2efb"
 S = "${WORKDIR}/git"
 
 ROS_BUILD_TYPE = "ament_cmake"
