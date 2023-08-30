@@ -15,6 +15,7 @@ RDEPENDS:${PN} = "\
 "
 
 RDEPENDS:${PN}-samples = "\
+    rplidar-ros2 \
     demo-nodes-cpp \
     example-interfaces \
     logging-demo \
