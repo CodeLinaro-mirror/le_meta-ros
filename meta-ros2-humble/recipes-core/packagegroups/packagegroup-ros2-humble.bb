@@ -39,4 +39,10 @@ RDEPENDS:${PN}-samples = "\
     examples-rclcpp-minimal-publisher \
     examples-rclcpp-minimal-subscriber \
     negotiated-examples \
+    examples-rclpy-minimal-subscriber \
+    examples-rclpy-minimal-publisher \
+    examples-rclpy-minimal-action-server \
+    examples-rclpy-minimal-action-client \
+    demo-nodes-py \
+    action-tutorials-py \
 "
