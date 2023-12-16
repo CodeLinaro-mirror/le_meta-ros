@@ -11,7 +11,6 @@ PACKAGES = "\
 
 RDEPENDS:${PN} = "\
     ros-base \
-    rplidar-ros2 \
     ${PN}-samples \
     graphviz \
     rosidl-default-generators \
@@ -27,6 +26,7 @@ RDEPENDS:${PN} = "\
     cv-bridge \
     cartographer \
     domain-bridge \
+    python3-colcon-common-extensions \
 "
 
 RDEPENDS:${PN}-samples = "\
@@ -39,4 +39,8 @@ RDEPENDS:${PN}-samples = "\
     examples-rclcpp-minimal-publisher \
     examples-rclcpp-minimal-subscriber \
     negotiated-examples \
+    examples-rclpy-minimal-subscriber \
+    examples-rclpy-minimal-publisher \
+    examples-rclpy-minimal-action-server \
+    examples-rclpy-minimal-action-client \
 "
