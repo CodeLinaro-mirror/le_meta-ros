@@ -1,9 +1,7 @@
-# Branch `[honister]`
+# Branch `[kirkstone]`
 
 As of Milestone 17 (2022-06-05), this branch can be used to build the releases
-current in mid-November 2021 of ROS 2 **foxy** and **galactic** and ROS 1
-**melodic** and **noetic** with the **honister** OpenEmbedded release series as
-of the beginning of December 2021.
+of ROS 2 **humble** with the **kirkstone** OpenEmbedded release series.
 
 The mid-November 2021 release (and earlier releases) of ROS 2 **rolling** can no
 longer be built because the commits referenced by its recipes have been removed
