@@ -31,11 +31,13 @@ RDEPENDS:${PN} = "\
 
 RDEPENDS:${PN}-samples = "\
     demo-nodes-cpp \
+    demo-nodes-py \
     example-interfaces \
     logging-demo \
     composition \
     examples-rclcpp-minimal-action-server \
     action-tutorials-cpp \
+    action-tutorials-py \
     examples-rclcpp-minimal-publisher \
     examples-rclcpp-minimal-subscriber \
     negotiated-examples \
