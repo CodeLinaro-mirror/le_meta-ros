@@ -6,7 +6,7 @@ AUTHOR = "Peng Wang <quic_penwang@quicinc.com>"
 ROS_AUTHOR = "Peng Wang"
 SECTION = "devel"
 LICENSE = "BSD-3-Clause-Clear"
-LIC_FILES_CHKSUM = "file://package.xml;beginline=8;endline=8;md5=d566ef916e9dedc494f5f793a6690ba5"
+LIC_FILES_CHKSUM = "file://package.xml;beginline=8;endline=8;md5=52ca38c4529ed91857909f376825b021"
 
 ROS_CN = "dmabuf_transport"
 ROS_BPN = "dmabuf_transport"
