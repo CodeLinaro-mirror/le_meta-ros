@@ -15,6 +15,9 @@ RDEPENDS:${PN} = "\
     graphviz \
     rosidl-default-generators \
     nav2-msgs \
+    launch-ros \
+    nav2-common \
+    navigation2 \
     ament-lint-auto \
     ament-lint-common \
     ament-cmake-auto \
