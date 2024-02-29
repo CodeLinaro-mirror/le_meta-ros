@@ -18,6 +18,7 @@ RDEPENDS:${PN} = "\
     launch-ros \
     nav2-common \
     navigation2 \
+    joint-state-publisher \
     ament-lint-auto \
     ament-lint-common \
     ament-cmake-auto \
