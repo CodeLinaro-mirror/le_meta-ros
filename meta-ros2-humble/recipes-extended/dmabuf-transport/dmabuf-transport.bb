@@ -37,9 +37,8 @@ DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
 RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
 
-FILESPATH =+ "${WORKSPACE}/robotics/ros:"
-SRC_URI   =  "file://dmabuf_transport"
-S         =  "${WORKDIR}/dmabuf_transport"
+SRC_URI  +=  "git://git.codelinaro.org/clo/le/platform/vendor/qcom-opensource/ros.git;protocol=https;rev=ffc7b84ae7309994d6622a551646abfaed36448d;branch=ros.qclinux.1.0.r1-rel"
+S         =  "${WORKDIR}/git/dmabuf_transport"
 
 ROS_BUILD_TYPE = "ament_cmake"
 
