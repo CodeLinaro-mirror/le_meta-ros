@@ -11,7 +11,8 @@ PACKAGES = "\
 
 RDEPENDS:${PN} = "\
     ros-base \
-    rplidar-ros2 \
+    navigation2 \
+    nav2-bringup \
     ${PN}-samples \
     graphviz \
     rosidl-default-generators \
