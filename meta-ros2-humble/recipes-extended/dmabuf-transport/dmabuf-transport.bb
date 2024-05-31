@@ -35,14 +35,14 @@ ROS_EXEC_DEPENDS = " \
 DEPENDS = "${ROS_BUILD_DEPENDS} ${ROS_BUILDTOOL_DEPENDS}"
 DEPENDS += "${ROS_EXPORT_DEPENDS} ${ROS_BUILDTOOL_EXPORT_DEPENDS}"
 
-RDEPENDS:${PN} += "${ROS_EXEC_DEPENDS}"
-
-FILESPATH =+ "${WORKSPACE}/robotics/ros:"
-SRC_URI   =  "file://dmabuf_transport"
-S         =  "${WORKDIR}/dmabuf_transport"
+FILESPATH =+ "${WORKSPACE}/vendor/qcom/opensource/ros:"
+SRC_URI   =  "file://dmabuf_transport/"
+S         =  "${WORKDIR}/dmabuf_transport/"
 
 ROS_BUILD_TYPE = "ament_cmake"
 
 inherit ros_${ROS_BUILD_TYPE}
 
 RM_WORK_EXCLUDE += "${PN}"
+
+inherit robotics-package
