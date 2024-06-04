@@ -1,0 +1,2 @@
+#compressed-depth-image-transport/2.5.0-2-r0/recipe-sysroot/usr/include/rcutils/rcutils/logging_macros.h:72:18: error: format not a string literal and no format arguments [-Werror=format-security]CXXFLAGS += "-Wno-format-security"
+CXXFLAGS += "-Wno-format-security"

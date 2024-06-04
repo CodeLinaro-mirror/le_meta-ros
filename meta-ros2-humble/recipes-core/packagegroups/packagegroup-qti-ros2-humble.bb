@@ -19,6 +19,10 @@ RDEPENDS:${PN} = "\
     nav2-common \
     navigation2 \
     joint-state-publisher \
+    compressed-depth-image-transport \
+    compressed-image-transport \
+    theora-image-transport \
+    image-transport-plugins \
     ament-lint-auto \
     ament-lint-common \
     ament-cmake-auto \
