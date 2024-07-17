@@ -17,6 +17,11 @@ RDEPENDS:${PN} = "\
     graphviz \
     rosidl-default-generators \
     nav2-msgs \
+    joint-state-publisher \
+    compressed-depth-image-transport \
+    compressed-image-transport \
+    theora-image-transport \
+    image-transport-plugins \
     ament-lint-auto \
     ament-lint-common \
     ament-cmake-auto \
