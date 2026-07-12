@@ -3,7 +3,6 @@
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
 SRC_URI += "file://remove-ament-target-dependencies.patch \
-            file://drop-octomap-version-range.patch \
             file://remove-boost-system.patch \
             file://use-bullet-cmake-target.patch"
 
