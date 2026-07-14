@@ -4,11 +4,13 @@ Upstream-Status: Pending
 
 Signed-off-by: Rob Woolley <rob.woolley@windriver.com>
 
---- a/ConfigExtras.cmake
-+++ b/ConfigExtras.cmake
-@@ -4,7 +4,6 @@
-   Boost
-   REQUIRED
+Index: moveit-ros-warehouse-2.5.9-1/ConfigExtras.cmake
+===================================================================
+--- moveit-ros-warehouse-2.5.9-1.orig/ConfigExtras.cmake
++++ moveit-ros-warehouse-2.5.9-1/ConfigExtras.cmake
+@@ -3,7 +3,6 @@
+ find_package(
+   Boost REQUIRED
    thread
 -  system
    filesystem
