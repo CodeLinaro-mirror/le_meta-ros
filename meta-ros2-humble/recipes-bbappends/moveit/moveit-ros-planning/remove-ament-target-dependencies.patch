@@ -262,7 +262,7 @@ Index: moveit-ros-planning-2.5.9-1/CMakeLists.txt
    tf2_msgs
    tf2_geometry_msgs
  )
-@@ -88,8 +90,13 @@ add_subdirectory(trajectory_execution_ma
+@@ -88,16 +90,27 @@ add_subdirectory(trajectory_execution_ma
  add_subdirectory(plan_execution)
  add_subdirectory(moveit_cpp)
  
@@ -273,10 +273,29 @@ Index: moveit-ros-planning-2.5.9-1/CMakeLists.txt
 +
  install(
 -  TARGETS ${THIS_PACKAGE_LIBRARIES}
+-  EXPORT export_${PROJECT_NAME}
 +  TARGETS moveit_ros_planning ${THIS_PACKAGE_LIBRARIES}
-   EXPORT export_${PROJECT_NAME}
++  EXPORT moveit_ros_planningTargets
    LIBRARY DESTINATION lib
    ARCHIVE DESTINATION lib
+-  RUNTIME DESTINATION bin
+-  INCLUDES DESTINATION include
+-)
++  RUNTIME DESTINATION bin)
++
++# install plugins as separate export set
++install(
++  TARGETS moveit_default_planning_request_adapter_plugins
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib
++  RUNTIME DESTINATION bin)
++
+ 
+-ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
++ament_export_targets(moveit_ros_planningTargets HAS_LIBRARY_TARGET)
+ ament_export_dependencies(${THIS_PACKAGE_INCLUDE_DEPENDS})
+ 
+ pluginlib_export_plugin_description_file(moveit_core "planning_request_adapters_plugin_description.xml")
 Index: moveit-ros-planning-2.5.9-1/collision_plugin_loader/CMakeLists.txt
 ===================================================================
 --- moveit-ros-planning-2.5.9-1.orig/collision_plugin_loader/CMakeLists.txt
@@ -528,7 +547,7 @@ Index: moveit-ros-planning-2.5.9-1/planning_request_adapter_plugins/CMakeLists.t
  set(SOURCE_FILES
    src/empty.cpp
    src/fix_start_state_bounds.cpp
-@@ -13,15 +11,19 @@ set(SOURCE_FILES
+@@ -13,15 +11,15 @@ set(SOURCE_FILES
    src/resolve_constraint_frames.cpp
  )
  
@@ -537,20 +556,33 @@ Index: moveit-ros-planning-2.5.9-1/planning_request_adapter_plugins/CMakeLists.t
  
 -set_target_properties(${MOVEIT_LIB_NAME} PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
 -ament_target_dependencies(${MOVEIT_LIB_NAME}
+-  Boost
+-  moveit_core
+-  rclcpp
+-  pluginlib
+-)
 +set_target_properties(moveit_default_planning_request_adapter_plugins PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
-+ament_target_dependencies(moveit_default_planning_request_adapter_plugins
-   Boost
-   moveit_core
-   rclcpp
-   pluginlib
- )
 +target_link_libraries(
 +  moveit_default_planning_request_adapter_plugins
-+  moveit_core::moveit_core rclcpp::rclcpp
++  moveit_core::moveit_core
++  rclcpp::rclcpp
++  Boost::headers
 +  pluginlib::pluginlib)
  
  add_executable(moveit_list_request_adapter_plugins src/list.cpp)
  ament_target_dependencies(moveit_list_request_adapter_plugins
+@@ -30,6 +28,11 @@ ament_target_dependencies(moveit_list_re
+   rclcpp
+   pluginlib
+ )
++target_link_libraries(
++  moveit_list_request_adapter_plugins
++  rclcpp::rclcpp
++  Boost::headers
++  moveit_core::moveit_core)
+ 
+ install(TARGETS moveit_list_request_adapter_plugins
+   DESTINATION lib/${PROJECT_NAME}
 Index: moveit-ros-planning-2.5.9-1/planning_scene_monitor/CMakeLists.txt
 ===================================================================
 --- moveit-ros-planning-2.5.9-1.orig/planning_scene_monitor/CMakeLists.txt
