@@ -242,17 +242,19 @@ Co-authored-by: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
  .../moveit_setup_srdf_plugins/CMakeLists.txt  |   5 +-
  100 files changed, 1548 insertions(+), 788 deletions(-)
 
-diff --git moveit_ros_robot_interaction/CMakeLists.txt moveit_ros_robot_interaction/CMakeLists.txt
-index c9140d2a4..8d0dcb810 100644
---- moveit_ros_robot_interaction/CMakeLists.txt
-+++ moveit_ros_robot_interaction/CMakeLists.txt
-@@ -14,8 +14,14 @@ find_package(tf2_geometry_msgs REQUIRED)
- find_package(tf2_ros REQUIRED)
- find_package(rclcpp REQUIRED)
-
--set(THIS_PACKAGE_INCLUDE_DEPENDS moveit_core moveit_ros_planning
--                                 interactive_markers tf2_geometry_msgs)
-+set(THIS_PACKAGE_INCLUDE_DEPENDS
+Index: moveit-ros-robot-interaction-2.5.9-1/CMakeLists.txt
+===================================================================
+--- moveit-ros-robot-interaction-2.5.9-1.orig/CMakeLists.txt
++++ moveit-ros-robot-interaction-2.5.9-1/CMakeLists.txt
+@@ -18,11 +18,13 @@ find_package(rclcpp REQUIRED)
+ set(MOVEIT_LIB_NAME moveit_robot_interaction)
+ 
+ set(THIS_PACKAGE_INCLUDE_DEPENDS
+-  moveit_core
+-  moveit_ros_planning
+-  interactive_markers
+-  tf2_geometry_msgs
+-)
 +    moveit_core
 +    moveit_ros_planning
 +    interactive_markers
@@ -260,15 +262,14 @@ index c9140d2a4..8d0dcb810 100644
 +    tf2_eigen
 +    tf2_ros
 +    tf2_geometry_msgs)
-
+ 
  include_directories(include)
-
-@@ -32,8 +38,15 @@ target_include_directories(
- set_target_properties(
-   moveit_robot_interaction PROPERTIES VERSION
-                                       "${moveit_ros_robot_interaction_VERSION}")
--ament_target_dependencies(moveit_robot_interaction
--                          ${THIS_PACKAGE_INCLUDE_DEPENDS})
+ 
+@@ -38,7 +40,15 @@ include(GenerateExportHeader)
+ generate_export_header(${MOVEIT_LIB_NAME})
+ target_include_directories(${MOVEIT_LIB_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
+ set_target_properties(${MOVEIT_LIB_NAME} PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
+-ament_target_dependencies(${MOVEIT_LIB_NAME} ${THIS_PACKAGE_INCLUDE_DEPENDS})
 +target_link_libraries(
 +  moveit_robot_interaction
 +  moveit_core::moveit_core
@@ -278,13 +279,13 @@ index c9140d2a4..8d0dcb810 100644
 +  tf2_eigen::tf2_eigen
 +  tf2_ros::tf2_ros
 +  tf2_geometry_msgs::tf2_geometry_msgs)
-
+ 
  if(BUILD_TESTING)
    find_package(ament_cmake_gtest REQUIRED)
-@@ -41,8 +54,15 @@ if(BUILD_TESTING)
-   target_link_libraries(locked_robot_state_test moveit_robot_interaction)
+@@ -46,9 +56,16 @@ if(BUILD_TESTING)
+   target_link_libraries(locked_robot_state_test ${MOVEIT_LIB_NAME})
  endif()
-
+ 
 +# Create an umbrella INTERFACE target so downstream packages can use
 +# moveit_ros_robot_interaction::moveit_ros_robot_interaction to link all
 +# libraries at once.
@@ -293,8 +294,19 @@ index c9140d2a4..8d0dcb810 100644
 +                      INTERFACE moveit_robot_interaction)
 +
  install(
--  TARGETS moveit_robot_interaction
+-  TARGETS ${MOVEIT_LIB_NAME}
+-  EXPORT export_${PROJECT_NAME}
 +  TARGETS moveit_ros_robot_interaction moveit_robot_interaction
-   EXPORT moveit_ros_robot_interactionTargets
++  EXPORT moveit_ros_robot_interactionTargets
    LIBRARY DESTINATION lib
    ARCHIVE DESTINATION lib
+   RUNTIME DESTINATION bin
+@@ -60,7 +77,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR
+ 
+ install(DIRECTORY resources DESTINATION share/${PROJECT_NAME})
+ 
+-ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
++ament_export_targets(moveit_ros_robot_interactionTargets HAS_LIBRARY_TARGET)
+ ament_export_dependencies(${THIS_PACKAGE_INCLUDE_DEPENDS})
+ 
+ if(BUILD_TESTING)
