@@ -11,7 +11,7 @@ Index: nav2-core-1.1.20-1/CMakeLists.txt
 ===================================================================
 --- nav2-core-1.1.20-1.orig/CMakeLists.txt
 +++ nav2-core-1.1.20-1/CMakeLists.txt
-@@ -16,16 +16,30 @@ find_package(nav_msgs REQUIRED)
+@@ -16,16 +16,29 @@ find_package(nav_msgs REQUIRED)
  
  nav2_package()
  
@@ -33,7 +33,6 @@ Index: nav2-core-1.1.20-1/CMakeLists.txt
 +)
 +target_link_libraries(nav2_core INTERFACE
 +  ${geometry_msgs_TARGETS}
-+  nav2_behavior_tree::nav2_behavior_tree
 +  nav2_costmap_2d::nav2_costmap_2d_core
 +  nav2_costmap_2d::nav2_costmap_2d_client
 +  nav2_util::nav2_util_core
@@ -52,7 +51,7 @@ Index: nav2-core-1.1.20-1/CMakeLists.txt
  )
  
  install(DIRECTORY include/
-@@ -39,7 +53,18 @@ if(BUILD_TESTING)
+@@ -39,7 +52,17 @@ if(BUILD_TESTING)
    ament_lint_auto_find_test_dependencies()
  endif()
  
@@ -61,7 +60,6 @@ Index: nav2-core-1.1.20-1/CMakeLists.txt
 +ament_export_include_directories(include/${PROJECT_NAME})
 +ament_export_dependencies(
 +  geometry_msgs
-+  nav2_behavior_tree
 +  nav2_costmap_2d
 +  nav2_util
 +  nav_msgs
