@@ -73,16 +73,16 @@ Signed-off-by: Chris Lalancette <clalancette@gmail.com>
  39 files changed, 228 insertions(+), 287 deletions(-)
  rename nav2_behavior_tree/{test => include/nav2_behavior_tree}/utils/test_action_server.hpp (94%)
 
-Index: nav2-behavior-tree-1.3.11-1/CMakeLists.txt
+Index: nav2-behavior-tree-1.1.20-1/CMakeLists.txt
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/CMakeLists.txt
-+++ nav2-behavior-tree-1.3.11-1/CMakeLists.txt
-@@ -2,55 +2,48 @@ cmake_minimum_required(VERSION 3.5)
+--- nav2-behavior-tree-1.1.20-1.orig/CMakeLists.txt
++++ nav2-behavior-tree-1.1.20-1/CMakeLists.txt
+@@ -2,53 +2,47 @@ cmake_minimum_required(VERSION 3.5)
  project(nav2_behavior_tree CXX)
-
+ 
  find_package(ament_cmake REQUIRED)
 +find_package(action_msgs REQUIRED)
-+find_package(behaviortree_cpp REQUIRED)
++find_package(behaviortree_cpp_v3 REQUIRED)
 +find_package(geometry_msgs REQUIRED)
  find_package(nav2_common REQUIRED)
 +find_package(nav2_msgs REQUIRED)
@@ -96,7 +96,7 @@ Index: nav2-behavior-tree-1.3.11-1/CMakeLists.txt
  find_package(sensor_msgs REQUIRED)
 -find_package(nav2_msgs REQUIRED)
 -find_package(nav_msgs REQUIRED)
--find_package(behaviortree_cpp REQUIRED)
+-find_package(behaviortree_cpp_v3 REQUIRED)
 -find_package(tf2_ros REQUIRED)
 -find_package(tf2_geometry_msgs REQUIRED)
  find_package(std_msgs REQUIRED)
@@ -104,17 +104,15 @@ Index: nav2-behavior-tree-1.3.11-1/CMakeLists.txt
 -find_package(nav2_util REQUIRED)
 +find_package(tf2 REQUIRED)
 +find_package(tf2_ros REQUIRED)
-
+ 
  nav2_package()
-
- add_compile_options(-Wno-shadow) # Delete after https://github.com/BehaviorTree/BehaviorTree.CPP/issues/811 is released
-
+ 
 -include_directories(
 -  include
 -)
 -
  set(library_name ${PROJECT_NAME})
-
+ 
 -set(dependencies
 -  rclcpp
 -  rclcpp_action
@@ -123,7 +121,7 @@ Index: nav2-behavior-tree-1.3.11-1/CMakeLists.txt
 -  sensor_msgs
 -  nav2_msgs
 -  nav_msgs
--  behaviortree_cpp
+-  behaviortree_cpp_v3
 -  tf2
 -  tf2_ros
 -  tf2_geometry_msgs
@@ -135,7 +133,7 @@ Index: nav2-behavior-tree-1.3.11-1/CMakeLists.txt
  add_library(${library_name} SHARED
    src/behavior_tree_engine.cpp
  )
--
+ 
 -ament_target_dependencies(${library_name}
 -  ${dependencies}
 +target_include_directories(${library_name}
@@ -144,7 +142,7 @@ Index: nav2-behavior-tree-1.3.11-1/CMakeLists.txt
 +  "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
 +target_link_libraries(${library_name} PUBLIC
 +  ${action_msgs_TARGETS}
-+  behaviortree_cpp::behaviortree_cpp
++  BT::behaviortree_cpp_v3
 +  ${geometry_msgs_TARGETS}
 +  ${nav_msgs_TARGETS}
 +  ${nav2_msgs_TARGETS}
@@ -156,11 +154,11 @@ Index: nav2-behavior-tree-1.3.11-1/CMakeLists.txt
 +  tf2::tf2
 +  tf2_ros::tf2_ros
  )
-
+ 
  add_library(nav2_compute_path_to_pose_action_bt_node SHARED plugins/action/compute_path_to_pose_action.cpp)
-@@ -234,12 +227,30 @@ add_library(nav2_compute_route_bt_node S
+@@ -208,12 +202,30 @@ add_library(nav2_compute_route_bt_node S
  list(APPEND plugin_libs nav2_compute_route_bt_node)
-
+ 
  foreach(bt_plugin ${plugin_libs})
 -  ament_target_dependencies(${bt_plugin} ${dependencies})
 +  target_include_directories(${bt_plugin}
@@ -168,7 +166,7 @@ Index: nav2-behavior-tree-1.3.11-1/CMakeLists.txt
 +    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
 +    "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
 +  target_link_libraries(${bt_plugin} PUBLIC
-+    behaviortree_cpp::behaviortree_cpp
++    BT::behaviortree_cpp_v3
 +    ${geometry_msgs_TARGETS}
 +    ${nav_msgs_TARGETS}
 +    ${nav2_msgs_TARGETS}
@@ -184,7 +182,7 @@ Index: nav2-behavior-tree-1.3.11-1/CMakeLists.txt
 +  )
    target_compile_definitions(${bt_plugin} PRIVATE BT_PLUGIN_EXPORT)
  endforeach()
-
+ 
 -install(TARGETS ${library_name}
 -                ${plugin_libs}
 +install(TARGETS ${library_name} ${plugin_libs}
@@ -192,55 +190,22 @@ Index: nav2-behavior-tree-1.3.11-1/CMakeLists.txt
    ARCHIVE DESTINATION lib
    LIBRARY DESTINATION lib
    RUNTIME DESTINATION bin
-@@ -250,12 +261,14 @@ set(GENERATED_DIR ${CMAKE_CURRENT_BINARY
- configure_file(plugins_list.hpp.in ${GENERATED_DIR}/plugins_list.hpp)
-
- add_executable(generate_nav2_tree_nodes_xml src/generate_nav2_tree_nodes_xml.cpp)
--ament_target_dependencies(generate_nav2_tree_nodes_xml ${dependencies})
-+target_link_libraries(generate_nav2_tree_nodes_xml PRIVATE
-+  behaviortree_cpp::behaviortree_cpp
-+  nav2_util::nav2_util_core
-+)
- # allow generate_nav2_tree_nodes_xml to find plugins_list.hpp
- target_include_directories(generate_nav2_tree_nodes_xml PRIVATE ${GENERATED_DIR})
- install(TARGETS generate_nav2_tree_nodes_xml DESTINATION lib/${PROJECT_NAME})
-
--
- install(DIRECTORY include/
-   DESTINATION include/
- )
-@@ -264,29 +277,40 @@ install(DIRECTORY test/utils/
-         DESTINATION include/${PROJECT_NAME}/utils/
- )
-
--install(DIRECTORY test/utils/
--  DESTINATION include/${PROJECT_NAME}/nav2_behavior_tree/test/utils
--)
--
- install(FILES nav2_tree_nodes.xml DESTINATION share/${PROJECT_NAME})
--install(FILES ${GENERATED_DIR}/plugins_list.hpp DESTINATION include/${PROJECT_NAME})
-+install(FILES ${GENERATED_DIR}/plugins_list.hpp DESTINATION include/${PROJECT_NAME}/${PROJECT_NAME})
-
- if(BUILD_TESTING)
-   find_package(ament_lint_auto REQUIRED)
-   ament_lint_auto_find_test_dependencies()
-   find_package(ament_cmake_gtest REQUIRED)
-+
-   add_subdirectory(test)
+@@ -233,14 +245,28 @@ if(BUILD_TESTING)
  endif()
-
+ 
  ament_export_include_directories(
 -  include
 +  include/${PROJECT_NAME}
  )
-
+ 
 -ament_export_libraries(
 -  ${library_name}
 -  ${plugin_libs}
 -)
-+ament_export_libraries(${library_name})
-
+-
 -ament_export_dependencies(${dependencies})
++ament_export_libraries(${library_name})
+ 
 +ament_export_dependencies(
 +  action_msgs
 +  behaviortree_cpp
@@ -259,16 +224,16 @@ Index: nav2-behavior-tree-1.3.11-1/CMakeLists.txt
 +  tf2_ros
 +)
 +ament_export_targets(${library_name})
-
++ 
  ament_package()
-Index: nav2-behavior-tree-1.3.11-1/include/nav2_behavior_tree/bt_action_server.hpp
+Index: nav2-behavior-tree-1.1.20-1/include/nav2_behavior_tree/bt_action_server.hpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/include/nav2_behavior_tree/bt_action_server.hpp
-+++ nav2-behavior-tree-1.3.11-1/include/nav2_behavior_tree/bt_action_server.hpp
+--- nav2-behavior-tree-1.1.20-1.orig/include/nav2_behavior_tree/bt_action_server.hpp
++++ nav2-behavior-tree-1.1.20-1/include/nav2_behavior_tree/bt_action_server.hpp
 @@ -15,6 +15,8 @@
  #ifndef NAV2_BEHAVIOR_TREE__BT_ACTION_SERVER_HPP_
  #define NAV2_BEHAVIOR_TREE__BT_ACTION_SERVER_HPP_
-
+ 
 +#include <chrono>
 +#include <functional>
  #include <memory>
@@ -280,17 +245,17 @@ Index: nav2-behavior-tree-1.3.11-1/include/nav2_behavior_tree/bt_action_server.h
  #include "nav2_util/simple_action_server.hpp"
 +#include "rclcpp/rclcpp.hpp"
 +#include "rclcpp_lifecycle/lifecycle_node.hpp"
-
+ 
  namespace nav2_behavior_tree
  {
-Index: nav2-behavior-tree-1.3.11-1/include/nav2_behavior_tree/bt_action_server_impl.hpp
+Index: nav2-behavior-tree-1.1.20-1/include/nav2_behavior_tree/bt_action_server_impl.hpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/include/nav2_behavior_tree/bt_action_server_impl.hpp
-+++ nav2-behavior-tree-1.3.11-1/include/nav2_behavior_tree/bt_action_server_impl.hpp
-@@ -15,18 +15,20 @@
+--- nav2-behavior-tree-1.1.20-1.orig/include/nav2_behavior_tree/bt_action_server_impl.hpp
++++ nav2-behavior-tree-1.1.20-1/include/nav2_behavior_tree/bt_action_server_impl.hpp
+@@ -15,17 +15,20 @@
  #ifndef NAV2_BEHAVIOR_TREE__BT_ACTION_SERVER_IMPL_HPP_
  #define NAV2_BEHAVIOR_TREE__BT_ACTION_SERVER_IMPL_HPP_
-
+ 
 -#include <memory>
 -#include <string>
 +#include <chrono>
@@ -302,138 +267,32 @@ Index: nav2-behavior-tree-1.3.11-1/include/nav2_behavior_tree/bt_action_server_i
 -#include <exception>
 +#include <string>
  #include <vector>
--#include <limits>
-
+ 
  #include "nav2_msgs/action/navigate_to_pose.hpp"
  #include "nav2_behavior_tree/bt_action_server.hpp"
 -#include "ament_index_cpp/get_package_share_directory.hpp"
  #include "nav2_util/node_utils.hpp"
 +#include "rcl_action/action_server.h"
 +#include "rclcpp_lifecycle/lifecycle_node.hpp"
-
+ 
  namespace nav2_behavior_tree
  {
-Index: nav2-behavior-tree-1.3.11-1/include/nav2_behavior_tree/ros_topic_logger.hpp
+Index: nav2-behavior-tree-1.1.20-1/include/nav2_behavior_tree/ros_topic_logger.hpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/include/nav2_behavior_tree/ros_topic_logger.hpp
-+++ nav2-behavior-tree-1.3.11-1/include/nav2_behavior_tree/ros_topic_logger.hpp
+--- nav2-behavior-tree-1.1.20-1.orig/include/nav2_behavior_tree/ros_topic_logger.hpp
++++ nav2-behavior-tree-1.1.20-1/include/nav2_behavior_tree/ros_topic_logger.hpp
 @@ -23,6 +23,7 @@
  #include "rclcpp/rclcpp.hpp"
  #include "nav2_msgs/msg/behavior_tree_log.hpp"
  #include "nav2_msgs/msg/behavior_tree_status_change.h"
 +#include "tf2/time.h"
  #include "tf2_ros/buffer_interface.h"
-
+ 
  namespace nav2_behavior_tree
-Index: nav2-behavior-tree-1.3.11-1/test/utils/test_action_server.hpp
-===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/utils/test_action_server.hpp
-+++ /dev/null
-@@ -1,100 +0,0 @@
--// Copyright (c) 2020 Sarthak Mittal
--//
--// Licensed under the Apache License, Version 2.0 (the "License");
--// you may not use this file except in compliance with the License.
--// You may obtain a copy of the License at
--//
--//     http://www.apache.org/licenses/LICENSE-2.0
--//
--// Unless required by applicable law or agreed to in writing, software
--// distributed under the License is distributed on an "AS IS" BASIS,
--// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
--// See the License for the specific language governing permissions and
--// limitations under the License.
--
--#ifndef UTILS__TEST_ACTION_SERVER_HPP_
--#define UTILS__TEST_ACTION_SERVER_HPP_
--
--#include <string>
--#include <memory>
--
--#include "rclcpp/rclcpp.hpp"
--#include "rclcpp_action/rclcpp_action.hpp"
--
--template<class ActionT>
--class TestActionServer : public rclcpp::Node
--{
--public:
--  explicit TestActionServer(
--    std::string action_name,
--    const rclcpp::NodeOptions & options = rclcpp::NodeOptions())
--  : Node("test_action_server", options)
--  {
--    using namespace std::placeholders;  // NOLINT
--
--    this->action_server_ = rclcpp_action::create_server<ActionT>(
--      this->get_node_base_interface(),
--      this->get_node_clock_interface(),
--      this->get_node_logging_interface(),
--      this->get_node_waitables_interface(),
--      action_name,
--      std::bind(&TestActionServer::handle_goal, this, _1, _2),
--      std::bind(&TestActionServer::handle_cancel, this, _1),
--      std::bind(&TestActionServer::handle_accepted, this, _1));
--  }
--
--  std::shared_ptr<const typename ActionT::Goal> getCurrentGoal() const
--  {
--    return current_goal_;
--  }
--
--  void setReturnSuccess(bool return_success)
--  {
--    return_success_ = return_success;
--  }
--
--  bool getReturnSuccess(void)
--  {
--    return return_success_;
--  }
--
--  bool isGoalCancelled()
--  {
--    return goal_cancelled_;
--  }
--
--protected:
--  virtual rclcpp_action::GoalResponse handle_goal(
--    const rclcpp_action::GoalUUID &,
--    std::shared_ptr<const typename ActionT::Goal> goal)
--  {
--    current_goal_ = goal;
--    return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
--  }
--
--  virtual rclcpp_action::CancelResponse handle_cancel(
--    const typename std::shared_ptr<rclcpp_action::ServerGoalHandle<ActionT>>)
--  {
--    goal_cancelled_ = true;
--    return rclcpp_action::CancelResponse::ACCEPT;
--  }
--
--  virtual void execute(
--    const typename std::shared_ptr<rclcpp_action::ServerGoalHandle<ActionT>> goal_handle) = 0;
--
--  void handle_accepted(
--    const std::shared_ptr<rclcpp_action::ServerGoalHandle<ActionT>> goal_handle)
--  {
--    using namespace std::placeholders;  // NOLINT
--    // this needs to return quickly to avoid blocking the executor, so spin up a new thread
--    std::thread{std::bind(&TestActionServer::execute, this, _1), goal_handle}.detach();
--  }
--
--private:
--  typename rclcpp_action::Server<ActionT>::SharedPtr action_server_;
--  std::shared_ptr<const typename ActionT::Goal> current_goal_;
--  bool return_success_ = true;
--  bool goal_cancelled_ = false;
--};
--
--#endif  // UTILS__TEST_ACTION_SERVER_HPP_
-Index: nav2-behavior-tree-1.3.11-1/include/nav2_behavior_tree/utils/test_action_server.hpp
+Index: nav2-behavior-tree-1.1.20-1/include/nav2_behavior_tree/utils/test_action_server.hpp
 ===================================================================
 --- /dev/null
-+++ nav2-behavior-tree-1.3.11-1/include/nav2_behavior_tree/utils/test_action_server.hpp
++++ nav2-behavior-tree-1.1.20-1/include/nav2_behavior_tree/utils/test_action_server.hpp
 @@ -0,0 +1,100 @@
 +// Copyright (c) 2020 Sarthak Mittal
 +//
@@ -535,21 +394,21 @@ Index: nav2-behavior-tree-1.3.11-1/include/nav2_behavior_tree/utils/test_action_
 +};
 +
 +#endif  // NAV2_BEHAVIOR_TREE__UTILS__TEST_ACTION_SERVER_HPP_
-Index: nav2-behavior-tree-1.3.11-1/package.xml
+Index: nav2-behavior-tree-1.1.20-1/package.xml
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/package.xml
-+++ nav2-behavior-tree-1.3.11-1/package.xml
+--- nav2-behavior-tree-1.1.20-1.orig/package.xml
++++ nav2-behavior-tree-1.1.20-1/package.xml
 @@ -11,46 +11,26 @@
-
+ 
    <buildtool_depend>ament_cmake</buildtool_depend>
-
+ 
 -  <build_export_depend>tf2_geometry_msgs</build_export_depend>
 -  <build_export_depend>std_srvs</build_export_depend>
 -
 -  <build_depend>rclcpp</build_depend>
 -  <build_depend>rclcpp_action</build_depend>
 -  <build_depend>rclcpp_lifecycle</build_depend>
--  <build_depend>behaviortree_cpp</build_depend>
+-  <build_depend>behaviortree_cpp_v3</build_depend>
 -  <build_depend>builtin_interfaces</build_depend>
 -  <build_depend>geometry_msgs</build_depend>
 -  <build_depend>sensor_msgs</build_depend>
@@ -568,7 +427,7 @@ Index: nav2-behavior-tree-1.3.11-1/package.xml
 -  <exec_depend>rclcpp_action</exec_depend>
 -  <exec_depend>rclcpp_lifecycle</exec_depend>
 -  <exec_depend>std_msgs</exec_depend>
--  <exec_depend>behaviortree_cpp</exec_depend>
+-  <exec_depend>behaviortree_cpp_v3</exec_depend>
 -  <exec_depend>builtin_interfaces</exec_depend>
 -  <exec_depend>geometry_msgs</exec_depend>
 -  <exec_depend>sensor_msgs</exec_depend>
@@ -594,22 +453,22 @@ Index: nav2-behavior-tree-1.3.11-1/package.xml
 +  <depend>std_srvs</depend>
 +  <depend>tf2</depend>
 +  <depend>tf2_ros</depend>
-
+ 
    <test_depend>ament_lint_common</test_depend>
    <test_depend>ament_lint_auto</test_depend>
    <test_depend>ament_cmake_gtest</test_depend>
 +  <test_depend>lifecycle_msgs</test_depend>
    <test_depend>test_msgs</test_depend>
-
+ 
    <export>
-Index: nav2-behavior-tree-1.3.11-1/plugins/action/truncate_path_local_action.cpp
+Index: nav2-behavior-tree-1.1.20-1/plugins/action/truncate_path_local_action.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/plugins/action/truncate_path_local_action.cpp
-+++ nav2-behavior-tree-1.3.11-1/plugins/action/truncate_path_local_action.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/plugins/action/truncate_path_local_action.cpp
++++ nav2-behavior-tree-1.1.20-1/plugins/action/truncate_path_local_action.cpp
 @@ -12,6 +12,7 @@
  // See the License for the specific language governing permissions and
  // limitations under the License.
-
+ 
 +#include <cmath>
  #include <limits>
  #include <memory>
@@ -622,16 +481,16 @@ Index: nav2-behavior-tree-1.3.11-1/plugins/action/truncate_path_local_action.cpp
 +#include "tf2/LinearMath/Quaternion.h"
 +#include "tf2_ros/buffer.h"
  #include "tf2_ros/create_timer_ros.h"
-
+ 
  #include "nav2_behavior_tree/plugins/action/truncate_path_local_action.hpp"
-Index: nav2-behavior-tree-1.3.11-1/plugins/condition/transform_available_condition.cpp
+Index: nav2-behavior-tree-1.1.20-1/plugins/condition/transform_available_condition.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/plugins/condition/transform_available_condition.cpp
-+++ nav2-behavior-tree-1.3.11-1/plugins/condition/transform_available_condition.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/plugins/condition/transform_available_condition.cpp
++++ nav2-behavior-tree-1.1.20-1/plugins/condition/transform_available_condition.cpp
 @@ -12,9 +12,13 @@
  // See the License for the specific language governing permissions and
  // limitations under the License.
-
+ 
 -#include <string>
  #include <chrono>
  #include <memory>
@@ -640,308 +499,310 @@ Index: nav2-behavior-tree-1.3.11-1/plugins/condition/transform_available_conditi
 +#include "rclcpp/rclcpp.hpp"
 +#include "tf2/time.h"
 +#include "tf2_ros/buffer.h"
-
+ 
  #include "nav2_behavior_tree/plugins/condition/transform_available_condition.hpp"
-
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_assisted_teleop_action.cpp
+ 
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_assisted_teleop_action.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_assisted_teleop_action.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_assisted_teleop_action.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_assisted_teleop_action.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_assisted_teleop_action.cpp
 @@ -19,7 +19,7 @@
-
- #include "behaviortree_cpp/bt_factory.h"
-
--#include "utils/test_action_server.hpp"
+ 
+ #include "behaviortree_cpp_v3/bt_factory.h"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
  #include "nav2_behavior_tree/plugins/action/assisted_teleop_action.hpp"
-
+ 
  class AssistedTeleopActionServer : public TestActionServer<nav2_msgs::action::AssistedTeleop>
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_assisted_teleop_cancel_node.cpp
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_assisted_teleop_cancel_node.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_assisted_teleop_cancel_node.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_assisted_teleop_cancel_node.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_assisted_teleop_cancel_node.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_assisted_teleop_cancel_node.cpp
 @@ -19,7 +19,7 @@
-
- #include "behaviortree_cpp/bt_factory.h"
-
--#include "utils/test_action_server.hpp"
+ 
+ #include "behaviortree_cpp_v3/bt_factory.h"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
  #include "nav2_behavior_tree/plugins/action/assisted_teleop_cancel_node.hpp"
  #include "lifecycle_msgs/srv/change_state.hpp"
-
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_back_up_action.cpp
+ 
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_back_up_action.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_back_up_action.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_back_up_action.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_back_up_action.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_back_up_action.cpp
 @@ -20,7 +20,7 @@
-
- #include "behaviortree_cpp/bt_factory.h"
-
--#include "utils/test_action_server.hpp"
+ 
+ #include "behaviortree_cpp_v3/bt_factory.h"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
  #include "nav2_behavior_tree/plugins/action/back_up_action.hpp"
-
+ 
  class BackUpActionServer : public TestActionServer<nav2_msgs::action::BackUp>
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_back_up_cancel_node.cpp
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_back_up_cancel_node.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_back_up_cancel_node.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_back_up_cancel_node.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_back_up_cancel_node.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_back_up_cancel_node.cpp
 @@ -19,7 +19,7 @@
-
- #include "behaviortree_cpp/bt_factory.h"
-
--#include "utils/test_action_server.hpp"
+ 
+ #include "behaviortree_cpp_v3/bt_factory.h"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
  #include "nav2_behavior_tree/plugins/action/back_up_cancel_node.hpp"
  #include "lifecycle_msgs/srv/change_state.hpp"
-
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_compute_path_through_poses_action.cpp
+ 
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_compute_path_through_poses_action.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_compute_path_through_poses_action.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_compute_path_through_poses_action.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_compute_path_through_poses_action.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_compute_path_through_poses_action.cpp
 @@ -24,7 +24,7 @@
-
- #include "behaviortree_cpp/bt_factory.h"
-
--#include "utils/test_action_server.hpp"
+ 
+ #include "behaviortree_cpp_v3/bt_factory.h"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
  #include "nav2_behavior_tree/plugins/action/compute_path_through_poses_action.hpp"
-
+ 
  class ComputePathThroughPosesActionServer
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_compute_path_to_pose_action.cpp
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_compute_path_to_pose_action.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_compute_path_to_pose_action.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_compute_path_to_pose_action.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_compute_path_to_pose_action.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_compute_path_to_pose_action.cpp
 @@ -23,7 +23,7 @@
-
- #include "behaviortree_cpp/bt_factory.h"
-
--#include "utils/test_action_server.hpp"
+ 
+ #include "behaviortree_cpp_v3/bt_factory.h"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
  #include "nav2_behavior_tree/plugins/action/compute_path_to_pose_action.hpp"
-
+ 
  class ComputePathToPoseActionServer : public TestActionServer<nav2_msgs::action::ComputePathToPose>
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_controller_cancel_node.cpp
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_controller_cancel_node.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_controller_cancel_node.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_controller_cancel_node.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_controller_cancel_node.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_controller_cancel_node.cpp
 @@ -19,7 +19,7 @@
-
- #include "behaviortree_cpp/bt_factory.h"
-
--#include "utils/test_action_server.hpp"
+ 
+ #include "behaviortree_cpp_v3/bt_factory.h"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
  #include "nav2_behavior_tree/plugins/action/controller_cancel_node.hpp"
  #include "lifecycle_msgs/srv/change_state.hpp"
-
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_controller_selector_node.cpp
+ 
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_controller_selector_node.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_controller_selector_node.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_controller_selector_node.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_controller_selector_node.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_controller_selector_node.cpp
 @@ -19,7 +19,7 @@
  #include <set>
  #include <string>
-
--#include "utils/test_action_server.hpp"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
- #include "behaviortree_cpp/bt_factory.h"
+ #include "behaviortree_cpp_v3/bt_factory.h"
  #include "nav2_behavior_tree/plugins/action/controller_selector_node.hpp"
  #include "nav_msgs/msg/path.hpp"
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_drive_on_heading_action.cpp
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_drive_on_heading_action.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_drive_on_heading_action.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_drive_on_heading_action.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_drive_on_heading_action.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_drive_on_heading_action.cpp
 @@ -20,7 +20,7 @@
-
- #include "behaviortree_cpp/bt_factory.h"
-
--#include "utils/test_action_server.hpp"
+ 
+ #include "behaviortree_cpp_v3/bt_factory.h"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
  #include "nav2_behavior_tree/plugins/action/drive_on_heading_action.hpp"
-
+ 
  class DriveOnHeadingActionServer : public TestActionServer<nav2_msgs::action::DriveOnHeading>
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_drive_on_heading_cancel_node.cpp
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_drive_on_heading_cancel_node.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_drive_on_heading_cancel_node.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_drive_on_heading_cancel_node.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_drive_on_heading_cancel_node.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_drive_on_heading_cancel_node.cpp
 @@ -19,7 +19,7 @@
-
- #include "behaviortree_cpp/bt_factory.h"
-
--#include "utils/test_action_server.hpp"
+ 
+ #include "behaviortree_cpp_v3/bt_factory.h"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
  #include "nav2_behavior_tree/plugins/action/drive_on_heading_cancel_node.hpp"
  #include "lifecycle_msgs/srv/change_state.hpp"
-
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_follow_path_action.cpp
+ 
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_follow_path_action.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_follow_path_action.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_follow_path_action.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_follow_path_action.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_follow_path_action.cpp
 @@ -23,7 +23,7 @@
-
- #include "behaviortree_cpp/bt_factory.h"
-
--#include "utils/test_action_server.hpp"
+ 
+ #include "behaviortree_cpp_v3/bt_factory.h"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
  #include "nav2_behavior_tree/plugins/action/follow_path_action.hpp"
-
+ 
  class FollowPathActionServer : public TestActionServer<nav2_msgs::action::FollowPath>
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_get_pose_from_path_action.cpp
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_get_pose_from_path_action.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_get_pose_from_path_action.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_get_pose_from_path_action.cpp
-@@ -25,7 +25,7 @@
-
- #include "behaviortree_cpp/bt_factory.h"
-
--#include "utils/test_action_server.hpp"
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_get_pose_from_path_action.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_get_pose_from_path_action.cpp
+@@ -25,9 +25,10 @@
+ 
+ #include "behaviortree_cpp_v3/bt_factory.h"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
  #include "nav2_behavior_tree/plugins/action/get_pose_from_path_action.hpp"
- #include "utils/test_behavior_tree_fixture.hpp"
-
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_goal_checker_selector_node.cpp
+-#include "../../test_behavior_tree_fixture.hpp"
++#include "nav2_behavior_tree/utils/test_action_server.hpp"
++#include "nav2_behavior_tree/utils/test_behavior_tree_fixture.hpp"
+ 
+ class GetPoseFromPathTestFixture : public ::testing::Test
+ {
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_goal_checker_selector_node.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_goal_checker_selector_node.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_goal_checker_selector_node.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_goal_checker_selector_node.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_goal_checker_selector_node.cpp
 @@ -19,7 +19,7 @@
  #include <set>
  #include <string>
-
--#include "utils/test_action_server.hpp"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
- #include "behaviortree_cpp/bt_factory.h"
+ #include "behaviortree_cpp_v3/bt_factory.h"
  #include "nav2_behavior_tree/plugins/action/goal_checker_selector_node.hpp"
  #include "nav_msgs/msg/path.hpp"
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_navigate_through_poses_action.cpp
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_navigate_through_poses_action.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_navigate_through_poses_action.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_navigate_through_poses_action.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_navigate_through_poses_action.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_navigate_through_poses_action.cpp
 @@ -25,7 +25,7 @@
-
- #include "behaviortree_cpp/bt_factory.h"
-
--#include "utils/test_action_server.hpp"
+ 
+ #include "behaviortree_cpp_v3/bt_factory.h"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
  #include "nav2_behavior_tree/plugins/action/navigate_through_poses_action.hpp"
-
+ 
  class NavigateThroughPosesActionServer
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_navigate_to_pose_action.cpp
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_navigate_to_pose_action.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_navigate_to_pose_action.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_navigate_to_pose_action.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_navigate_to_pose_action.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_navigate_to_pose_action.cpp
 @@ -24,7 +24,7 @@
-
- #include "behaviortree_cpp/bt_factory.h"
-
--#include "utils/test_action_server.hpp"
+ 
+ #include "behaviortree_cpp_v3/bt_factory.h"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
  #include "nav2_behavior_tree/plugins/action/navigate_to_pose_action.hpp"
-
+ 
  class NavigateToPoseActionServer : public TestActionServer<nav2_msgs::action::NavigateToPose>
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_planner_selector_node.cpp
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_planner_selector_node.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_planner_selector_node.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_planner_selector_node.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_planner_selector_node.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_planner_selector_node.cpp
 @@ -19,7 +19,7 @@
  #include <set>
  #include <string>
-
--#include "utils/test_action_server.hpp"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
- #include "behaviortree_cpp/bt_factory.h"
+ #include "behaviortree_cpp_v3/bt_factory.h"
  #include "nav2_behavior_tree/plugins/action/planner_selector_node.hpp"
  #include "nav_msgs/msg/path.hpp"
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_progress_checker_selector_node.cpp
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_progress_checker_selector_node.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_progress_checker_selector_node.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_progress_checker_selector_node.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_progress_checker_selector_node.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_progress_checker_selector_node.cpp
 @@ -18,7 +18,7 @@
  #include <set>
  #include <string>
-
--#include "utils/test_action_server.hpp"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
- #include "behaviortree_cpp/bt_factory.h"
+ #include "behaviortree_cpp_v3/bt_factory.h"
  #include "nav2_behavior_tree/plugins/action/progress_checker_selector_node.hpp"
  #include "nav_msgs/msg/path.hpp"
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_remove_passed_goals_action.cpp
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_remove_passed_goals_action.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_remove_passed_goals_action.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_remove_passed_goals_action.cpp
-@@ -25,7 +25,7 @@
-
- #include "behaviortree_cpp/bt_factory.h"
-
--#include "utils/test_action_server.hpp"
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_remove_passed_goals_action.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_remove_passed_goals_action.cpp
+@@ -25,9 +25,9 @@
+ 
+ #include "behaviortree_cpp_v3/bt_factory.h"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
  #include "nav2_behavior_tree/plugins/action/remove_passed_goals_action.hpp"
- #include "utils/test_behavior_tree_fixture.hpp"
-
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_smooth_path_action.cpp
+-#include "../../test_behavior_tree_fixture.hpp"
++#include "utils/test_behavior_tree_fixture.hpp"
+ 
+ class RemovePassedGoalsTestFixture : public ::testing::Test
+ {
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_smooth_path_action.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_smooth_path_action.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_smooth_path_action.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_smooth_path_action.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_smooth_path_action.cpp
 @@ -23,7 +23,7 @@
-
- #include "behaviortree_cpp/bt_factory.h"
-
--#include "utils/test_action_server.hpp"
+ 
+ #include "behaviortree_cpp_v3/bt_factory.h"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
  #include "nav2_behavior_tree/plugins/action/smooth_path_action.hpp"
-
+ 
  class SmoothPathActionServer : public TestActionServer<nav2_msgs::action::SmoothPath>
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_smoother_selector_node.cpp
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_smoother_selector_node.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_smoother_selector_node.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_smoother_selector_node.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_smoother_selector_node.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_smoother_selector_node.cpp
 @@ -19,7 +19,7 @@
  #include <set>
  #include <string>
-
--#include "utils/test_action_server.hpp"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
- #include "behaviortree_cpp/bt_factory.h"
+ #include "behaviortree_cpp_v3/bt_factory.h"
  #include "nav2_behavior_tree/plugins/action/smoother_selector_node.hpp"
  #include "nav_msgs/msg/path.hpp"
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_spin_action.cpp
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_spin_action.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_spin_action.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_spin_action.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_spin_action.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_spin_action.cpp
 @@ -20,7 +20,7 @@
-
- #include "behaviortree_cpp/bt_factory.h"
-
--#include "utils/test_action_server.hpp"
+ 
+ #include "behaviortree_cpp_v3/bt_factory.h"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
  #include "nav2_behavior_tree/plugins/action/spin_action.hpp"
-
+ 
  class SpinActionServer : public TestActionServer<nav2_msgs::action::Spin>
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_spin_cancel_node.cpp
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_spin_cancel_node.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_spin_cancel_node.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_spin_cancel_node.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_spin_cancel_node.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_spin_cancel_node.cpp
 @@ -19,7 +19,7 @@
-
- #include "behaviortree_cpp/bt_factory.h"
-
--#include "utils/test_action_server.hpp"
+ 
+ #include "behaviortree_cpp_v3/bt_factory.h"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
  #include "nav2_behavior_tree/plugins/action/spin_cancel_node.hpp"
  #include "lifecycle_msgs/srv/change_state.hpp"
-
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_truncate_path_action.cpp
+ 
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_truncate_path_action.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_truncate_path_action.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_truncate_path_action.cpp
-@@ -14,17 +14,21 @@
- // limitations under the License.
-
- #include <gtest/gtest.h>
-+
- #include <memory>
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_truncate_path_action.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_truncate_path_action.cpp
+@@ -18,13 +18,16 @@
  #include <set>
  #include <string>
-
+ 
 -#include "nav_msgs/msg/path.hpp"
  #include "geometry_msgs/msg/pose_stamped.hpp"
 +#include "nav_msgs/msg/path.hpp"
@@ -949,63 +810,63 @@ Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_truncate_path_action
 +#include "rclcpp/rclcpp.hpp"
 +#include "tf2/LinearMath/Matrix3x3.h"
 +#include "tf2/LinearMath/Quaternion.h"
-
- #include "behaviortree_cpp/bt_factory.h"
-
--#include "utils/test_action_server.hpp"
+ 
+ #include "behaviortree_cpp_v3/bt_factory.h"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
  #include "nav2_behavior_tree/plugins/action/truncate_path_action.hpp"
-
-
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_wait_action.cpp
+ 
+ 
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_wait_action.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_wait_action.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_wait_action.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_wait_action.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_wait_action.cpp
 @@ -20,7 +20,7 @@
-
- #include "behaviortree_cpp/bt_factory.h"
-
--#include "utils/test_action_server.hpp"
+ 
+ #include "behaviortree_cpp_v3/bt_factory.h"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
  #include "nav2_behavior_tree/plugins/action/wait_action.hpp"
-
+ 
  class WaitActionServer : public TestActionServer<nav2_msgs::action::Wait>
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/action/test_wait_cancel_node.cpp
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/action/test_wait_cancel_node.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/action/test_wait_cancel_node.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/action/test_wait_cancel_node.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/action/test_wait_cancel_node.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/action/test_wait_cancel_node.cpp
 @@ -19,7 +19,7 @@
-
- #include "behaviortree_cpp/bt_factory.h"
-
--#include "utils/test_action_server.hpp"
+ 
+ #include "behaviortree_cpp_v3/bt_factory.h"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
  #include "nav2_behavior_tree/plugins/action/wait_cancel_node.hpp"
  #include "lifecycle_msgs/srv/change_state.hpp"
-
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/control/CMakeLists.txt
+ 
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/control/CMakeLists.txt
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/control/CMakeLists.txt
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/control/CMakeLists.txt
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/control/CMakeLists.txt
++++ nav2-behavior-tree-1.1.20-1/test/plugins/control/CMakeLists.txt
 @@ -1,11 +1,5 @@
 -ament_add_gtest(test_control_recovery_node test_recovery_node.cpp)
 -target_link_libraries(test_control_recovery_node nav2_recovery_node_bt_node)
 -ament_target_dependencies(test_control_recovery_node ${dependencies})
 +plugin_add_test(test_control_recovery_node test_recovery_node.cpp nav2_recovery_node_bt_node)
-
+ 
 -ament_add_gtest(test_control_pipeline_sequence test_pipeline_sequence.cpp)
 -target_link_libraries(test_control_pipeline_sequence nav2_pipeline_sequence_bt_node)
 -ament_target_dependencies(test_control_pipeline_sequence ${dependencies})
 +plugin_add_test(test_control_pipeline_sequence test_pipeline_sequence.cpp nav2_pipeline_sequence_bt_node)
-
+ 
 -ament_add_gtest(test_control_round_robin_node test_round_robin_node.cpp)
 -target_link_libraries(test_control_round_robin_node nav2_round_robin_node_bt_node)
 -ament_target_dependencies(test_control_round_robin_node ${dependencies})
 +plugin_add_test(test_control_round_robin_node test_round_robin_node.cpp nav2_round_robin_node_bt_node)
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/decorator/CMakeLists.txt
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/decorator/CMakeLists.txt
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/decorator/CMakeLists.txt
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/decorator/CMakeLists.txt
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/decorator/CMakeLists.txt
++++ nav2-behavior-tree-1.1.20-1/test/plugins/decorator/CMakeLists.txt
 @@ -1,27 +1,13 @@
 -ament_add_gtest(test_decorator_distance_controller test_distance_controller.cpp)
 -target_link_libraries(test_decorator_distance_controller nav2_distance_controller_bt_node)
@@ -1047,14 +908,16 @@ Index: nav2-behavior-tree-1.3.11-1/test/plugins/decorator/CMakeLists.txt
 +plugin_add_test(test_goal_updated_controller test_goal_updated_controller.cpp nav2_goal_updated_controller_bt_node)
 +
 +plugin_add_test(test_decorator_path_longer_on_approach test_path_longer_on_approach.cpp nav2_path_longer_on_approach_bt_node)
-Index: nav2-behavior-tree-1.3.11-1/test/plugins/decorator/test_goal_updater_node.cpp
+Index: nav2-behavior-tree-1.1.20-1/test/plugins/decorator/test_goal_updater_node.cpp
 ===================================================================
---- nav2-behavior-tree-1.3.11-1.orig/test/plugins/decorator/test_goal_updater_node.cpp
-+++ nav2-behavior-tree-1.3.11-1/test/plugins/decorator/test_goal_updater_node.cpp
+--- nav2-behavior-tree-1.1.20-1.orig/test/plugins/decorator/test_goal_updater_node.cpp
++++ nav2-behavior-tree-1.1.20-1/test/plugins/decorator/test_goal_updater_node.cpp
 @@ -23,7 +23,7 @@
-
- #include "behaviortree_cpp/bt_factory.h"
-
--#include "utils/test_action_server.hpp"
+ 
+ #include "behaviortree_cpp_v3/bt_factory.h"
+ 
+-#include "../../test_action_server.hpp"
 +#include "nav2_behavior_tree/utils/test_action_server.hpp"
  #include "nav2_behavior_tree/plugins/decorator/goal_updater_node.hpp"
+ 
+ 
