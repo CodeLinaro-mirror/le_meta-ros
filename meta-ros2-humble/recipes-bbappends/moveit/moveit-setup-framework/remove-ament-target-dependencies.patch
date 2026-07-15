@@ -242,15 +242,15 @@ Co-authored-by: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
  .../moveit_setup_srdf_plugins/CMakeLists.txt  |   5 +-
  100 files changed, 1548 insertions(+), 788 deletions(-)
 
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -47,20 +47,21 @@
-   moveit_setup_framework
-   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-          $<INSTALL_INTERFACE:include/moveit_setup_framework>)
--ament_target_dependencies(
-+target_link_libraries(
-   moveit_setup_framework
+Index: moveit-setup-framework-2.5.9-1/CMakeLists.txt
+===================================================================
+--- moveit-setup-framework-2.5.9-1.orig/CMakeLists.txt
++++ moveit-setup-framework-2.5.9-1/CMakeLists.txt
+@@ -46,20 +46,21 @@ target_include_directories(${PROJECT_NAM
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+   $<INSTALL_INTERFACE:include>
+ )
+-ament_target_dependencies(${PROJECT_NAME}
 -  ament_index_cpp
 -  moveit_core
 -  moveit_ros_planning
@@ -262,7 +262,10 @@ Co-authored-by: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
 -  rviz_common
 -  rviz_rendering
 -  srdfdom
--  urdf)
+-  urdf
+-)
++target_link_libraries(
++  moveit_setup_framework
 +  PUBLIC ament_index_cpp::ament_index_cpp
 +         fmt::fmt
 +         moveit_core::moveit_core
@@ -276,6 +279,6 @@ Co-authored-by: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
 +         rviz_rendering::rviz_rendering
 +         srdfdom::srdfdom
 +         urdf::urdf)
-
- install(DIRECTORY include/ DESTINATION include/moveit_setup_framework)
- install(FILES moveit_setup_framework_plugins.xml
+ 
+ if(BUILD_TESTING)
+   find_package(ament_lint_auto REQUIRED)
