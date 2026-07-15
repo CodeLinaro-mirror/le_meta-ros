@@ -242,10 +242,10 @@ Co-authored-by: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
  .../moveit_setup_srdf_plugins/CMakeLists.txt  |   5 +-
  100 files changed, 1548 insertions(+), 788 deletions(-)
 
-diff --git moveit_ros_planning_interface/CMakeLists.txt moveit_ros_planning_interface/CMakeLists.txt
-index 47470e0a7..352628e9f 100644
---- moveit_ros_planning_interface/CMakeLists.txt
-+++ moveit_ros_planning_interface/CMakeLists.txt
+Index: moveit-ros-planning-interface-2.5.9-1/CMakeLists.txt
+===================================================================
+--- moveit-ros-planning-interface-2.5.9-1.orig/CMakeLists.txt
++++ moveit-ros-planning-interface-2.5.9-1/CMakeLists.txt
 @@ -11,6 +11,7 @@ find_package(moveit_core REQUIRED)
  find_package(moveit_ros_planning REQUIRED)
  find_package(moveit_ros_warehouse REQUIRED)
@@ -254,18 +254,18 @@ index 47470e0a7..352628e9f 100644
  find_package(geometry_msgs REQUIRED)
  find_package(tf2 REQUIRED)
  find_package(tf2_eigen REQUIRED)
-@@ -36,6 +37,7 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
-     moveit_ros_planning
-     moveit_ros_warehouse
-     moveit_ros_move_group
-+    moveit_ros_occupancy_map_monitor
-     tf2
-     tf2_eigen
-     tf2_geometry_msgs
-@@ -74,8 +76,15 @@ if(BUILD_TESTING)
-
+@@ -51,6 +52,7 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
+   moveit_ros_planning
+   moveit_ros_warehouse
+   moveit_ros_move_group
++  moveit_ros_occupancy_map_monitor
+   tf2
+   tf2_eigen
+   tf2_geometry_msgs
+@@ -91,8 +93,15 @@ if(BUILD_TESTING)
+ 
  endif()
-
+ 
 +# Create an umbrella INTERFACE target so downstream packages can use
 +# moveit_ros_planning_interface::moveit_ros_planning_interface to link all
 +# libraries at once.
@@ -276,41 +276,45 @@ index 47470e0a7..352628e9f 100644
  install(
 -  TARGETS ${THIS_PACKAGE_LIBRARIES}
 +  TARGETS moveit_ros_planning_interface ${THIS_PACKAGE_LIBRARIES}
-   EXPORT moveit_ros_planning_interfaceTargets
+   EXPORT export_${PROJECT_NAME}
    LIBRARY DESTINATION lib
    ARCHIVE DESTINATION lib
-diff --git moveit_ros_planning_interface/common_planning_interface_objects/CMakeLists.txt moveit_ros_planning_interface/common_planning_interface_objects/CMakeLists.txt
-index eb8715926..8473c56c5 100644
---- moveit_ros_planning_interface/common_planning_interface_objects/CMakeLists.txt
-+++ moveit_ros_planning_interface/common_planning_interface_objects/CMakeLists.txt
-@@ -2,7 +2,7 @@ add_library(moveit_common_planning_interface_objects SHARED
-             src/common_objects.cpp)
- set_target_properties(moveit_common_planning_interface_objects
-                       PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
--ament_target_dependencies(moveit_common_planning_interface_objects rclcpp
--                          moveit_ros_planning tf2_ros)
+Index: moveit-ros-planning-interface-2.5.9-1/common_planning_interface_objects/CMakeLists.txt
+===================================================================
+--- moveit-ros-planning-interface-2.5.9-1.orig/common_planning_interface_objects/CMakeLists.txt
++++ moveit-ros-planning-interface-2.5.9-1/common_planning_interface_objects/CMakeLists.txt
+@@ -2,10 +2,7 @@ set(MOVEIT_LIB_NAME moveit_common_planni
+ 
+ add_library(${MOVEIT_LIB_NAME} SHARED src/common_objects.cpp)
+ set_target_properties(${MOVEIT_LIB_NAME} PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
+-ament_target_dependencies(${MOVEIT_LIB_NAME}
+-    rclcpp
+-    moveit_ros_planning
+-    tf2_ros
+-)
 +target_link_libraries(moveit_common_planning_interface_objects rclcpp::rclcpp
 +                      moveit_ros_planning::moveit_ros_planning tf2_ros::tf2_ros)
-
- install(DIRECTORY include/ DESTINATION include/moveit_ros_planning_interface)
-diff --git moveit_ros_planning_interface/move_group_interface/CMakeLists.txt moveit_ros_planning_interface/move_group_interface/CMakeLists.txt
-index 04367e9a7..2744c454f 100644
---- moveit_ros_planning_interface/move_group_interface/CMakeLists.txt
-+++ moveit_ros_planning_interface/move_group_interface/CMakeLists.txt
-@@ -7,16 +7,16 @@ target_include_directories(
- set_target_properties(moveit_move_group_interface
-                       PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
- target_link_libraries(
--  moveit_move_group_interface moveit_common_planning_interface_objects
--  moveit_planning_scene_interface ${Boost_THREAD_LIBRARY})
--ament_target_dependencies(
-   moveit_move_group_interface
+ 
+ install(DIRECTORY include/ DESTINATION include)
+Index: moveit-ros-planning-interface-2.5.9-1/move_group_interface/CMakeLists.txt
+===================================================================
+--- moveit-ros-planning-interface-2.5.9-1.orig/move_group_interface/CMakeLists.txt
++++ moveit-ros-planning-interface-2.5.9-1/move_group_interface/CMakeLists.txt
+@@ -5,15 +5,17 @@ include(GenerateExportHeader)
+ generate_export_header(${MOVEIT_LIB_NAME})
+ target_include_directories(${MOVEIT_LIB_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
+ set_target_properties(${MOVEIT_LIB_NAME} PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
+-target_link_libraries(${MOVEIT_LIB_NAME} moveit_common_planning_interface_objects moveit_planning_scene_interface ${Boost_THREAD_LIBRARY})
+-ament_target_dependencies(${MOVEIT_LIB_NAME}
 -  moveit_core
 -  moveit_msgs
 -  moveit_ros_move_group
 -  moveit_ros_occupancy_map_monitor
 -  moveit_ros_planning
--  moveit_ros_warehouse)
+-  moveit_ros_warehouse
+-)
++target_link_libraries(
++  moveit_move_group_interface
 +  moveit_common_planning_interface_objects
 +  moveit_planning_scene_interface
 +  ${Boost_THREAD_LIBRARY}
@@ -320,22 +324,21 @@ index 04367e9a7..2744c454f 100644
 +  moveit_ros_occupancy_map_monitor::moveit_ros_occupancy_map_monitor
 +  moveit_ros_planning::moveit_ros_planning
 +  moveit_ros_warehouse::moveit_ros_warehouse)
-
+ 
  # TODO (ddengster) : port wrap_python_move_group
- # add_library(moveit_move_group_interface_python src/wrap_python_move_group.cpp)
-diff --git moveit_ros_planning_interface/planning_scene_interface/CMakeLists.txt moveit_ros_planning_interface/planning_scene_interface/CMakeLists.txt
-index 10264ea6d..d9662c0da 100644
---- moveit_ros_planning_interface/planning_scene_interface/CMakeLists.txt
-+++ moveit_ros_planning_interface/planning_scene_interface/CMakeLists.txt
-@@ -2,8 +2,9 @@ add_library(moveit_planning_scene_interface SHARED
-             src/planning_scene_interface.cpp)
- set_target_properties(moveit_planning_scene_interface
-                       PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
--ament_target_dependencies(moveit_planning_scene_interface moveit_msgs
--                          moveit_core moveit_ros_move_group)
+ #add_library(${MOVEIT_LIB_NAME}_python src/wrap_python_move_group.cpp)
+Index: moveit-ros-planning-interface-2.5.9-1/planning_scene_interface/CMakeLists.txt
+===================================================================
+--- moveit-ros-planning-interface-2.5.9-1.orig/planning_scene_interface/CMakeLists.txt
++++ moveit-ros-planning-interface-2.5.9-1/planning_scene_interface/CMakeLists.txt
+@@ -2,7 +2,9 @@ set(MOVEIT_LIB_NAME moveit_planning_scen
+ 
+ add_library(${MOVEIT_LIB_NAME} SHARED src/planning_scene_interface.cpp)
+ set_target_properties(${MOVEIT_LIB_NAME} PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
+-ament_target_dependencies(${MOVEIT_LIB_NAME} moveit_msgs moveit_core moveit_ros_move_group)
 +target_link_libraries(
 +  moveit_planning_scene_interface ${moveit_msgs_TARGETS}
 +  moveit_core::moveit_core moveit_ros_move_group::moveit_ros_move_group)
-
+ 
  # TODO(JafarAbdi): Support python wrapper
- # add_library(moveit_planning_scene_interface_python
+ #add_library(${MOVEIT_LIB_NAME}_python src/wrap_python_planning_scene_interface.cpp)
