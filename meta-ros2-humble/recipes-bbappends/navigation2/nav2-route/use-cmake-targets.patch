@@ -7,11 +7,16 @@ Upstream-Status: Backport [https://github.com/ros-navigation/navigation2/commit/
 
 Signed-off-by: Rob Woolley <rob.woolley@windriver.com>
 
-Index: nav2-route-1.1.20-1/CMakeLists.txt
-===================================================================
---- nav2-route-1.1.20-1.orig/CMakeLists.txt
-+++ nav2-route-1.1.20-1/CMakeLists.txt
-@@ -29,22 +29,6 @@ include_directories(
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -22,27 +22,11 @@
+ 
+ nav2_package()
+ 
+-include_directories(
+-  include
+-)
+-
  set(executable_name route_server)
  set(library_name ${executable_name}_core)
  
@@ -29,15 +34,17 @@ Index: nav2-route-1.1.20-1/CMakeLists.txt
 -  nav2_core
 -  nanoflann
 -  nlohmann_json
--)
--
- # Main library
- add_library(${library_name} SHARED
-   src/route_server.cpp
-@@ -63,12 +47,40 @@ ament_target_dependencies(${library_name
-   ${dependencies}
++include_directories(
++  include
  )
  
+ # Main library
+@@ -59,8 +43,31 @@
+   src/goal_intent_extractor.cpp
+ )
+ 
+-ament_target_dependencies(${library_name}
+-  ${dependencies}
 +target_include_directories(${library_name}
 +  PUBLIC
 +    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
@@ -46,37 +53,40 @@ Index: nav2-route-1.1.20-1/CMakeLists.txt
 +target_link_libraries(${library_name} PUBLIC
 +  nav2_core::nav2_core
 +  nav2_costmap_2d::nav2_costmap_2d_core
-+  ${nav2_msgs_TARGETS}
 +  nav2_util::nav2_util_core
-+  ${nav_msgs_TARGETS}
++  nav_msgs::nav_msgs
 +  pluginlib::pluginlib
 +  rclcpp::rclcpp
 +  rclcpp_lifecycle::rclcpp_lifecycle
-+  ${rcl_interfaces_TARGETS}
-+  ${geometry_msgs_TARGETS}
-+  ${visualization_msgs_TARGETS}
-+  ${std_msgs_TARGETS}
-+  ${nav_msgs_TARGETS}
++  rcl_interfaces::rcl_interfaces
++  geometry_msgs::geometry_msgs
++  visualization_msgs::visualization_msgs
++  std_msgs::std_msgs
++  nav_msgs::nav_msgs
 +  tf2_ros::tf2_ros
 +  nlohmann_json::nlohmann_json
 +)
 +target_link_libraries(${library_name} PRIVATE
-+  ${lifecycle_msgs_TARGETS}
++  lifecycle_msgs::lifecycle_msgs
 +  rclcpp_components::component
 +  tf2::tf2
-+)
-+
+ )
+ 
  # Main executable
- add_executable(${executable_name}
+@@ -68,11 +75,7 @@
    src/main.cpp
  )
  
 -target_link_libraries(${executable_name} ${library_name})
+-
+-ament_target_dependencies(${executable_name}
+-  ${dependencies}
+-)
 +target_link_libraries(${executable_name} PRIVATE ${library_name} rclcpp::rclcpp)
  
- ament_target_dependencies(${executable_name}
-   ${dependencies}
-@@ -88,8 +100,33 @@ add_library(edge_scorers SHARED
+ rclcpp_components_register_nodes(${library_name} "nav2_route::RouteServer")
+ 
+@@ -88,8 +91,32 @@
    src/plugins/edge_cost_functions/start_pose_orientation_scorer.cpp
  )
  
@@ -90,29 +100,28 @@ Index: nav2-route-1.1.20-1/CMakeLists.txt
 +target_link_libraries(edge_scorers PUBLIC
 +  nav2_core::nav2_core
 +  nav2_costmap_2d::nav2_costmap_2d_core
-+  ${nav2_msgs_TARGETS}
 +  nav2_util::nav2_util_core
-+  ${nav_msgs_TARGETS}
++  nav_msgs::nav_msgs
 +  pluginlib::pluginlib
 +  rclcpp::rclcpp
 +  rclcpp_lifecycle::rclcpp_lifecycle
-+  ${rcl_interfaces_TARGETS}
-+  ${geometry_msgs_TARGETS}
-+  ${visualization_msgs_TARGETS}
-+  ${std_msgs_TARGETS}
-+  ${nav_msgs_TARGETS}
++  rcl_interfaces::rcl_interfaces
++  geometry_msgs::geometry_msgs
++  visualization_msgs::visualization_msgs
++  std_msgs::std_msgs
++  nav_msgs::nav_msgs
 +  tf2_ros::tf2_ros
 +  angles::angles
 +  nlohmann_json::nlohmann_json
 +)
 +target_link_libraries(edge_scorers PRIVATE
-+  ${lifecycle_msgs_TARGETS}
++  lifecycle_msgs::lifecycle_msgs
 +  rclcpp_components::component
 +  tf2::tf2
  )
  
  # Route operations plugins
-@@ -101,8 +138,32 @@ add_library(route_operations SHARED
+@@ -101,8 +128,31 @@
    src/plugins/route_operations/time_marker.cpp
  )
  
@@ -126,28 +135,27 @@ Index: nav2-route-1.1.20-1/CMakeLists.txt
 +target_link_libraries(route_operations PUBLIC
 +  nav2_core::nav2_core
 +  nav2_costmap_2d::nav2_costmap_2d_core
-+  ${nav2_msgs_TARGETS}
 +  nav2_util::nav2_util_core
-+  ${nav_msgs_TARGETS}
++  nav_msgs::nav_msgs
 +  pluginlib::pluginlib
 +  rclcpp::rclcpp
 +  rclcpp_lifecycle::rclcpp_lifecycle
-+  ${rcl_interfaces_TARGETS}
-+  ${geometry_msgs_TARGETS}
-+  ${visualization_msgs_TARGETS}
-+  ${std_msgs_TARGETS}
-+  ${nav_msgs_TARGETS}
++  rcl_interfaces::rcl_interfaces
++  geometry_msgs::geometry_msgs
++  visualization_msgs::visualization_msgs
++  std_msgs::std_msgs
++  nav_msgs::nav_msgs
 +  tf2_ros::tf2_ros
 +  nlohmann_json::nlohmann_json
 +)
 +target_link_libraries(route_operations PRIVATE
-+  ${lifecycle_msgs_TARGETS}
++  lifecycle_msgs::lifecycle_msgs
 +  rclcpp_components::component
 +  tf2::tf2
  )
  
  # Graph Parser plugins
-@@ -110,16 +171,64 @@ add_library(graph_file_loaders SHARED
+@@ -110,16 +160,62 @@
      src/plugins/graph_file_loaders/geojson_graph_file_loader.cpp
  )
  
@@ -161,22 +169,21 @@ Index: nav2-route-1.1.20-1/CMakeLists.txt
 +target_link_libraries(graph_file_loaders PUBLIC
 +  nav2_core::nav2_core
 +  nav2_costmap_2d::nav2_costmap_2d_core
-+  ${nav2_msgs_TARGETS}
 +  nav2_util::nav2_util_core
-+  ${nav_msgs_TARGETS}
++  nav_msgs::nav_msgs
 +  pluginlib::pluginlib
 +  rclcpp::rclcpp
 +  rclcpp_lifecycle::rclcpp_lifecycle
-+  ${rcl_interfaces_TARGETS}
-+  ${geometry_msgs_TARGETS}
-+  ${visualization_msgs_TARGETS}
-+  ${std_msgs_TARGETS}
-+  ${nav_msgs_TARGETS}
++  rcl_interfaces::rcl_interfaces
++  geometry_msgs::geometry_msgs
++  visualization_msgs::visualization_msgs
++  std_msgs::std_msgs
++  nav_msgs::nav_msgs
 +  tf2_ros::tf2_ros
 +  nlohmann_json::nlohmann_json
 +)
 +target_link_libraries(graph_file_loaders PRIVATE
-+  ${lifecycle_msgs_TARGETS}
++  lifecycle_msgs::lifecycle_msgs
 +  rclcpp_components::component
 +  tf2::tf2
  )
@@ -195,28 +202,35 @@ Index: nav2-route-1.1.20-1/CMakeLists.txt
 +target_link_libraries(graph_file_savers PUBLIC
 +  nav2_core::nav2_core
 +  nav2_costmap_2d::nav2_costmap_2d_core
-+  ${nav2_msgs_TARGETS}
 +  nav2_util::nav2_util_core
-+  ${nav_msgs_TARGETS}
++  nav_msgs::nav_msgs
 +  pluginlib::pluginlib
 +  rclcpp::rclcpp
 +  rclcpp_lifecycle::rclcpp_lifecycle
-+  ${rcl_interfaces_TARGETS}
-+  ${geometry_msgs_TARGETS}
-+  ${visualization_msgs_TARGETS}
-+  ${std_msgs_TARGETS}
-+  ${nav_msgs_TARGETS}
++  rcl_interfaces::rcl_interfaces
++  geometry_msgs::geometry_msgs
++  visualization_msgs::visualization_msgs
++  std_msgs::std_msgs
++  nav_msgs::nav_msgs
 +  tf2_ros::tf2_ros
 +  nlohmann_json::nlohmann_json
 +)
 +target_link_libraries(graph_file_savers PRIVATE
-+  ${lifecycle_msgs_TARGETS}
++  lifecycle_msgs::lifecycle_msgs
 +  rclcpp_components::component
 +  tf2::tf2
  )
  
  pluginlib_export_plugin_description_file(nav2_route plugins.xml)
-@@ -151,6 +260,20 @@ if(BUILD_TESTING)
+@@ -133,6 +229,7 @@
+ )
+ 
+ install(TARGETS ${library_name} edge_scorers route_operations graph_file_loaders graph_file_savers
++  EXPORT export_${PROJECT_NAME}
+   ARCHIVE DESTINATION lib
+   LIBRARY DESTINATION lib
+   RUNTIME DESTINATION bin
+@@ -151,6 +248,21 @@
  endif()
  
  ament_export_include_directories(include)
@@ -237,4 +251,5 @@ Index: nav2-route-1.1.20-1/CMakeLists.txt
 +  nlohmann_json
 +)
  ament_export_libraries(${library_name} edge_scorers route_operations graph_file_loaders)
++ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
  ament_package()
