@@ -242,20 +242,22 @@ Co-authored-by: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
  .../moveit_setup_srdf_plugins/CMakeLists.txt  |   5 +-
  100 files changed, 1548 insertions(+), 788 deletions(-)
 
-diff --git moveit_setup_controllers/CMakeLists.txt moveit_setup_controllers/CMakeLists.txt
-index 402a52ad9..324423504 100644
---- moveit_setup_controllers/CMakeLists.txt
-+++ moveit_setup_controllers/CMakeLists.txt
-@@ -49,8 +49,10 @@ target_include_directories(
-   moveit_setup_controllers
-   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-          $<INSTALL_INTERFACE:include/moveit_setup_controllers>)
--ament_target_dependencies(moveit_setup_controllers ament_index_cpp
--                          moveit_setup_framework pluginlib rclcpp)
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -41,12 +41,10 @@
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+   $<INSTALL_INTERFACE:include>
+ )
+-ament_target_dependencies(${PROJECT_NAME}
+-  ament_index_cpp
+-  moveit_setup_framework
+-  pluginlib
+-  rclcpp
+-)
 +target_link_libraries(
 +  moveit_setup_controllers ament_index_cpp::ament_index_cpp
 +  moveit_setup_framework::moveit_setup_framework pluginlib::pluginlib
 +  rclcpp::rclcpp)
-
+ 
  if(BUILD_TESTING)
-   find_package(ament_cmake_gtest REQUIRED)
+   find_package(ament_lint_auto REQUIRED)
