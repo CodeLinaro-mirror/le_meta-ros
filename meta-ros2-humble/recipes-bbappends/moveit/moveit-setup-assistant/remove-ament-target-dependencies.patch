@@ -244,16 +244,18 @@ Co-authored-by: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
 
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -41,9 +41,16 @@
-   moveit_setup_assistant
-   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-          $<INSTALL_INTERFACE:include/moveit_setup_assistant>)
--ament_target_dependencies(moveit_setup_assistant
--                          ${THIS_PACKAGE_INCLUDE_DEPENDS})
--target_link_libraries(moveit_setup_assistant ${Boost_LIBRARIES})
+@@ -49,23 +49,32 @@
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+   $<INSTALL_INTERFACE:include>
+ )
+-ament_target_dependencies(
 +target_link_libraries(
-+  moveit_setup_assistant
-+  ${Boost_LIBRARIES}
+   moveit_setup_assistant
+-  ${THIS_PACKAGE_INCLUDE_DEPENDS}
+-)
+-target_link_libraries(moveit_setup_assistant
+   ${Boost_LIBRARIES}
+-)
 +  ament_index_cpp::ament_index_cpp
 +  moveit_setup_framework::moveit_setup_framework
 +  moveit_setup_srdf_plugins::moveit_setup_srdf_plugins
@@ -261,15 +263,16 @@ Co-authored-by: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
 +  Qt${QT_VERSION_MAJOR}::Core
 +  Qt${QT_VERSION_MAJOR}::Widgets
 +  rclcpp::rclcpp)
-
- add_executable(moveit_setup_assistant_updater src/collisions_updater.cpp)
- target_include_directories(
-@@ -51,8 +58,16 @@
-   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-          $<INSTALL_INTERFACE:include/moveit_setup_assistant>)
-
--ament_target_dependencies(moveit_setup_assistant_updater
--                          ${THIS_PACKAGE_INCLUDE_DEPENDS})
+ 
+ add_executable(${PROJECT_NAME}_updater src/collisions_updater.cpp)
+ target_include_directories(${PROJECT_NAME}_updater PUBLIC
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+   $<INSTALL_INTERFACE:include>)
+ 
+-ament_target_dependencies(
+-  ${PROJECT_NAME}_updater
+-  ${THIS_PACKAGE_INCLUDE_DEPENDS}
+-)
 +target_link_libraries(
 +  moveit_setup_assistant_updater
 +  ${Boost_LIBRARIES}
@@ -280,6 +283,6 @@ Co-authored-by: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
 +  Qt${QT_VERSION_MAJOR}::Core
 +  Qt${QT_VERSION_MAJOR}::Widgets
 +  rclcpp::rclcpp)
-
- set_target_properties(moveit_setup_assistant_updater
-                       PROPERTIES OUTPUT_NAME collisions_updater PREFIX "")
+ 
+ set_target_properties(
+   ${PROJECT_NAME}_updater
